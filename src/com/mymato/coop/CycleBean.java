@@ -23,7 +23,8 @@ public class CycleBean  implements Serializable {
 	private List<Cycle> cycles;
 	private CycleDAO cycleDAO;
 	private Logger logger = Logger.getLogger(getClass().getName());
-
+	
+	// no arg constructor
 	public CycleBean() throws Exception {
 		cycles = new ArrayList<>();
 		
