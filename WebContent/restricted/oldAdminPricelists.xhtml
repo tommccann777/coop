@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView" listener="#{pricelistBean.loadLists}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin - Price Lists</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Prepare Pricelists</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+    
+			<h:form id="mainform">
+				<p:growl id="growl_info" showDetail="true" life="4000" severity="info" />
+				<p:growl id="growl_warn" showDetail="false" life="4000" severity="warn" />
+				
+				<h:outputText value="Select supplier:" />
+				<p:selectOneMenu id="supplierSelector" value="#{pricelistBean.selectedSupplierName}" onchange="PF('productsTable').clearFilters()">
+					<f:selectItems value="#{pricelistBean.supplierNames}" />
+				    <p:ajax update="pricelistSelector productsTable result1 result2 result3" />
+				</p:selectOneMenu>
+				
+				<br/><br/>
+				
+				<h:outputText value="Select a price list:" />
+				<p:selectOneMenu id="pricelistSelector" value="#{pricelistBean.selectedPricelistName}" onchange="PF('productsTable').clearFilters()">
+					<f:selectItems value="#{pricelistBean.getPricelistNamesBySupplier(pricelistBean.selectedSupplierName)}" />
+				    <p:ajax update="productsTable result1 result2 result3" />
+				</p:selectOneMenu>
+				
+				<br/><br/>
+				<h:outputText id="result1" value="The selected supplier is #{pricelistBean.selectedSupplierName}" />
+				<br/><br/>
+				<h:outputText id="result2" value="The selected pricelist is #{pricelistBean.selectedPricelistName}" />
+				<br/><br/>
+				<h:outputText id="result3" value="The value of result3 = #{(!empty pricelistBean.selectedSupplierName) and (!empty pricelistBean.selectedPricelistName)}" />
+							
+				<br/><br/>
+				<h:outputText value="Products" />
+
+				<p:dataTable id="productsTable" value="#{pricelistBean.getProductsByPricelist(pricelistBean.selectedSupplierName, pricelistBean.selectedPricelistName)}" var="tempProduct"
+					emptyMessage="No products found"
+        			filteredValue="#{pricelistBean.filteredProducts}"
+        			widgetVar="productsTable">
+          			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTable').filter()" />
+					</p:outputPanel>
+					</f:facet>
+					
+					<p:column sortBy="#{tempProduct.productDescription}" headerText="Product" width="320" filterBy="#{tempProduct.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.productDescription}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProduct.category3}" headerText="Brand" width="320" filterBy="#{tempProduct.category3}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.category3}" />
+					</p:column>
+
+					<p:column headerText="Unit Size" width="120" style="text-align:left;">
+						<h:outputText value="#{tempProduct.unitSize}" />
+					</p:column>
+
+					<p:column headerText="Quantity" width="120" style="text-align:left;">
+						<h:outputText value="#{tempProduct.quantity}" />
+					</p:column>
+
+					<p:column headerText="Price" width="120" style="text-align:left;">
+						<h:outputText value="$#{tempProduct.unitTradePrice}" />
+					</p:column>
+					
+				</p:dataTable>
+			</h:form>
+		
+		
+		</div>
+
+	</div>
+
+</h:body>
+</html>

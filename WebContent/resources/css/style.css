@@ -1,0 +1,111 @@
+html,body{
+	margin-left:15px; margin-right:15px; 
+	padding:0px; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+.demo-table {   
+	border-collapse:collapse;
+	border-bottom:1px solid gray;
+	font-family: Tahoma,Verdana,Segoe,sans-serif;
+	width:72%;
+}
+ 
+.demo-table-header {
+	border-bottom:1px solid gray;
+	background:none repeat scroll 0 0 #0775d3;
+	padding:10px;
+	color: #FFFFFF;
+}
+ 
+.demo-table-odd-row {
+	border-top:1px solid gray;
+	background:none repeat scroll 0 0 #FFFFFFF;
+	text-align:center;
+}
+ 
+.demo-table-even-row {
+	border-top:1px solid gray;
+	background:none repeat scroll 0 0 #D0D0D0;
+	text-align:center;
+}
+
+#wrapper {width: 100%; margin-top: 0px; }
+#header {width: 70%; background: #0775d3; margin-top: 0px; padding:15px 0px 15px 15px;}
+#header h2 {width: 100%; margin:auto; color: #FFFFFF;}
+#container {width: 100%; margin:auto}
+#container h3 {color: #000;}
+#container form#add input { background: #50acd6; border: 1px solid #666; border-radius: 5px; color: #fff; padding: 8px; font-size: 16px;}
+#container form#find {margin-top:30px;}
+#container form#find label {font-size: 13px; color: #000; float:left; margin-right: 20px;}
+#container form#find input {border: 1px solid #ccc; border-radius: 3px; padding: 5px 10px; width: 86%;}
+#container #content {margin-top: 20px;}
+
+.ui-widget {
+    font-size: 14px;
+}
+
+.ui-growl {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 301px;
+}
+
+.ui-growl-item-container {
+    position: relative;
+    margin: 0 0 10px 0;
+    opacity: .85;
+    filter: alpha(opacity=85);
+    background-color: #9ccc65;
+    border-color: #9ccc65;
+}
+
+
+.ui-growl-item {
+    display: block;
+    padding: 10px 15px;
+}
+
+.ui-growl-message {
+    padding: 0 0 5px 0;
+    width: 220px;
+    float: right;
+}
+
+.ui-growl-title {
+    font-weight: bold;
+    padding: 0 0 7px 0;
+    display: block;
+}
+
+.ui-layout-pane {
+    border: 0;
+}
+
+.summaryRow {
+   background-color: #9ccc65;
+}
+
+/* the next 2 selectors stop the paginator being wider than the datatable */
+.ui-datatable {
+    display: table;
+}
+
+.ui-datatable table {
+    table-layout: auto !important;
+}
+
+/* the next 3 selectors are to style the file upload button */
+.ui-fileupload-buttonbar {
+    background: transparent none;
+    border: none;
+}
+
+.ui-fileupload-content {
+    display: none;
+}
+
+.ui-fileupload .ui-fileinput-button {
+    background-color: rgba(142, 103, 64, 0.98);
+}

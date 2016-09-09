@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView" listener="#{pricelistBean.loadLists}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin - Price Lists</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Admin Pricelists</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+    
+			<h:form id="mainform">
+				<p:growl id="growl_info" showDetail="true" life="4000" severity="info" />
+				<p:growl id="growl_warn" showDetail="false" life="4000" severity="warn" />
+				
+				<h:outputText value="Select supplier:" />
+				<p:selectOneMenu id="supplierSelector" value="#{pricelistBean.selectedSupplierName}">
+					<f:selectItem itemLabel="Select Supplier" noSelectionOption="true" />				    
+					<f:selectItems value="#{pricelistBean.supplierNames}" />
+				    <p:ajax update="pricelistsTable" />
+				</p:selectOneMenu>
+							
+				<br/><br/>
+				<h:outputText value="Price Lists" />
+				
+				<p:button value="Add Pricelist" outcome="AdminAddPricelist" />
+				<br /><br />
+
+				<p:dataTable id="pricelistsTable" value="#{pricelistBean.getPricelistsBySupplier(pricelistBean.selectedSupplierName)}" var="tempPricelist"
+					tableStyle="width:auto"
+					emptyMessage="No price lists found"
+        			widgetVar="pricelistsTable">
+					
+					<p:column headerText="Price List">
+						<h:outputText value="#{tempPricelist.listname}" />
+					</p:column>
+					
+				</p:dataTable>
+			</h:form>
+		
+		
+		</div>
+
+	</div>
+
+</h:body>
+</html>

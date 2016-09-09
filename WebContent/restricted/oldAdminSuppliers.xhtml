@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{supplierBean.loadSuppliers}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin Suppliers</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Admin Suppliers</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+			
+			<p:button value="Add Supplier" outcome="AdminAddSupplier" />
+			<br /><br />
+    
+			<h:form id="mainform">
+				<p:growl id="growl" showDetail="true" life="2000" />
+				
+				<p:dataTable value="#{supplierBean.suppliers}" var="tempSupplier"
+        			widgetVar="suppliersTable" tableStyle="width:auto">
+					
+					<p:column headerText="">
+						<p:commandLink value="Edit" action="#{supplierBean.loadSupplier(tempSupplier.id)}" />
+					</p:column>
+					
+					<p:column headerText="Name">
+						<h:outputText value="#{tempSupplier.supplierName}" />
+					</p:column>
+					
+					<p:column headerText="Contact">
+						<h:outputText value="#{tempSupplier.contact}" />
+					</p:column>
+					
+					<p:column headerText="Phone">
+						<h:outputText value="#{tempSupplier.phone}" />
+					</p:column>
+					
+					<p:column headerText="Email">
+						<h:outputText value="#{tempSupplier.email}" />
+					</p:column>
+					
+					<p:column headerText="Website">
+						<h:outputText value="#{tempSupplier.website}" />
+					</p:column>
+					
+				</p:dataTable>
+
+			</h:form>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

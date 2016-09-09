@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{orderFormBean.loadVSupplierOrderLines()}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Coop Order From Suppliers</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Order from suppliers for cycle #{loginBean.currentCycle.cycleNumber}</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+
+			<h:form id="mainform">
+				<p:growl id="growl_info" showDetail="true" life="4000"
+					severity="info" />
+				<p:growl id="growl_warn" showDetail="false" life="4000"
+					severity="warn" />
+
+				<br />
+				<h:outputText value="Supplier Orders" />
+
+				<p:treeTable id="supplierOrderLineTable" value="#{orderFormBean.tnSupplierOrderLines}" var="vSupplierOrderLine" tableStyle="width:auto" expanded="true">
+					
+        			<p:column headerText="Product">
+        				<h:outputText value="#{vSupplierOrderLine.categoryColumn}" />
+					</p:column>
+					
+					<p:column headerText="Unit Size">
+						<h:outputText value="#{vSupplierOrderLine.unitSize}" />
+					</p:column>
+					
+					<p:column headerText="Quantity">
+						<h:outputText value="#{vSupplierOrderLine.packQuantity}" />
+					</p:column>
+					
+					<p:column headerText="Price">
+						<h:outputText value="#{vSupplierOrderLine.price}">
+							<f:convertNumber currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Order Qty">
+						<h:outputText value="#{vSupplierOrderLine.orderQuantity}">
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Ordered">
+						<h:selectBooleanCheckbox value="#{vSupplierOrderLine.ordered}"
+						rendered="#{vSupplierOrderLine.rowType eq 'Data'}"
+						valueChangeListener="#{orderFormBean.handleOrderedChange}">
+							<p:ajax />
+						</h:selectBooleanCheckbox>
+					</p:column>
+					
+				</p:treeTable>
+			</h:form>
+
+
+		</div>
+
+	</div>
+
+</h:body>
+</html>

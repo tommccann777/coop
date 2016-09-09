@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin Add Supplier</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Admin Add Supplier</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<p:messages globalOnly="true" autoUpdate="true" />		
+    
+			<h:form id="mainform">
+				
+			<h:panelGrid columns="3">
+			
+			<p:outputLabel>Name:</p:outputLabel>
+			<p:inputText value="#{supplier.supplierName}" id="suppliername" required="true" label="Supplier Name" autocomplete="off" />
+			<p:message for="suppliername" />
+			
+			<p:outputLabel>Contact:</p:outputLabel>
+			<p:inputText value="#{supplier.contact}" id="contact" label="Contact" autocomplete="off" />
+			<p:message for="contact" />
+			
+			<p:outputLabel>Phone:</p:outputLabel>
+			<p:inputText value="#{supplier.phone}" id="phone" label="Phone" autocomplete="off" />
+			<p:message for="phone" />
+			
+			<p:outputLabel>Email:</p:outputLabel>
+			<p:inputText value="#{supplier.email}" id="email" label="Email" autocomplete="off" />
+			<p:message for="email" />
+			
+			<p:outputLabel>Website:</p:outputLabel>
+			<p:inputText value="#{supplier.website}" id="website" label="Website" autocomplete="off" />
+			<p:message for="website" />
+			
+			</h:panelGrid>
+			
+			<br/>
+			<p:commandButton value="Save" update="mainform" action="#{supplierBean.addSupplier(supplier)}" />
+			<h:outputText value="&#160;" />
+			<p:commandButton value="Cancel" action="AdminSuppliers" immediate="true" />
+			</h:form>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

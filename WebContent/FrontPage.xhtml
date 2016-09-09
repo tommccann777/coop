@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>
+		<title>Unsecured Front Page</title>
+	</h:head>
+	
+	<h:body>
+		<h:form prependId="false">
+		Some text before
+			<p:menu style="width:300px">
+			  
+	            <p:menuitem value="index.html" url="index.html" icon="ui-icon-home" />
+                <p:menuitem value="AdminUsers.xhtml" url="AdminUsers.xhtml" icon="ui-icon-document" />
+                <p:menuitem value="/AdminUsers.xhtml" url="/AdminUsers.xhtml" icon="ui-icon-document" />
+                <p:menuitem value="restricted/AdminUsers.xhtml" url="restricted/AdminUsers.xhtml" icon="ui-icon-document" />
+                <p:menuitem value="/restricted/AdminUsers.xhtml" url="/restricted/AdminUsers.xhtml" icon="ui-icon-document" />
+              
+        	</p:menu>
+
+		</h:form>
+	</h:body>
+</html>

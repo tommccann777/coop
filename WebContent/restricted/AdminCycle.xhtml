@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin Cycle</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Admin Cycle</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+			
+    
+			<h:form id="mainform">
+				<p:growl id="growl" showDetail="true" life="2000" />
+
+				
+			<h:panelGrid columns="3">
+			
+			<h:outputLabel>Cycle number:</h:outputLabel>
+			<h:inputText value="#{cycle.cycleNumber}" id="cycleNumber" />
+			<h:message for="cycleNumber" />
+			
+			<h:outputLabel>Start Day:</h:outputLabel>
+			<h:inputText value="#{cycle.startDay}" id="startDay">
+			<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:inputText>
+			<h:message for="startDay" />
+			
+			<h:outputLabel>Order First Day:</h:outputLabel>
+			<h:inputText value="#{cycle.orderFirstDay}" id="orderFirstDay">
+			<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:inputText>
+			<h:message for="orderFirstDay" />
+			
+			<h:outputLabel>Order Last Day:</h:outputLabel>
+			<h:inputText value="#{cycle.orderLastDay}" id="orderLastDay">
+			<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:inputText>
+			<h:message for="orderLastDay" />
+			
+			<h:outputLabel>Shareout Day:</h:outputLabel>
+			<h:inputText value="#{cycle.shareoutDay}" id="shareoutDay">
+			<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:inputText>
+			<h:message for="shareoutDay" />
+			
+			<h:outputLabel>Close Day:</h:outputLabel>
+			<h:inputText value="#{cycle.closeDay}" id="closeDay">
+			<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:inputText>
+			<h:message for="closeDay" />
+			
+			<h:outputLabel>Banner Message:</h:outputLabel> <h:inputText value="#{cycle.bannerMessage}" id="bannerMessage" /> <h:message for="bannerMessage" />
+			<h:outputLabel>Shareout Location:</h:outputLabel> <h:inputText value="#{cycle.shareoutLocation}" id="shareoutLocation" /> <h:message for="shareoutLocation" />
+			</h:panelGrid>
+			
+			<h:inputHidden value="#{cycle.id}" />
+			
+			<br/>
+			<p:commandButton value="Save" action="#{cycleBean.updateCycle(cycle)}" />
+			<h:outputText value="&#160;" />
+			<p:commandButton value="Cancel" action="AdminCycles" immediate="true" />
+			
+			</h:form>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

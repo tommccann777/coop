@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>
+		<title>Welcome</title>
+		
+		<style>
+        .ui-layout-unit .ui-layout-unit-content {
+            padding: 0.2em 0em;
+            border: 0px none;
+            overflow: hidden !important;
+        }
+    	</style>
+	</h:head>
+	
+	<h:body>
+		<p:layout style="margin: 0px; gutter: 0px !important!" fullPage="true" >
+ 
+	    <p:layoutUnit position="north" size="100" resizable="false" closable="false" collapsible="true" gutter="0" >
+	    	
+	    	<img src="#{request.contextPath}/resources/images/SimplyWaiheke3.jpg" />
+	    	
+	    </p:layoutUnit>
+	 
+	    <p:layoutUnit position="west" size="210" resizable="false" closable="false" collapsible="false" gutter="0">
+	    	<h:form id="menuForm">
+	        <p:menu style="width:180px">
+			  
+	            <p:menuitem value="Current order" url="/OrderForm2.xhtml" icon="ui-icon-home" rendered="#{loginBean.hasRole('Buyer')}" />
+	            <p:menuitem value="Previous orders" url="AdminUsers.xhtml" icon="ui-icon-home" rendered="#{loginBean.hasRole('Buyer')}" />
+                <p:menuitem value="My account" url="AdminUsers.xhtml" icon="ui-icon-document" rendered="#{loginBean.hasRole('Member')}" />
+                <p:menuitem value="Edit profile" url="AdminUsers.xhtml" icon="ui-icon-arrowthick-1-s" rendered="#{loginBean.hasRole('Buyer')}" />
+                <p:menuitem value="Ordering" url="AdminUsers.xhtml" icon="ui-icon-wrench" rendered="#{loginBean.hasRole('Ordering')}" />
+                <p:menuitem value="Shareout" url="AdminUsers.xhtml" icon="ui-icon-wrench" rendered="#{loginBean.hasRole('Shareout')}" />
+                <p:menuitem value="Accounts" url="AdminUsers.xhtml" icon="ui-icon-wrench" rendered="#{loginBean.hasRole('Accounts')}" />
+                <p:menuitem value="Admin" url="AdminUsers.xhtml" icon="ui-icon-wrench" rendered="#{loginBean.hasRole('Admin')}" />
+                <p:menuitem value="Sign out" action="#{loginBean.doLogout}" icon="ui-icon-wrench" />
+              
+        	</p:menu>
+        	</h:form>
+	    </p:layoutUnit>
+	 
+	    <p:layoutUnit position="center" collapsible="true" gutter="0">
+	        <h:outputText value="Welcome, #{loginBean.loggedInUser.firstname}" />
+	        
+	        <br/>
+	        <br/>
+	        
+	        <h:outputText value="The current cycle number is #{loginBean.currentCycle.cycleNumber}, for the period " />
+	        
+	        <h:outputText value="#{loginBean.currentCycle.startDay}" >
+	        	<f:convertDateTime pattern="EEEE, dd MMM" />
+	        </h:outputText>
+	        <h:outputText value=" to " />
+	        <h:outputText value="#{loginBean.currentCycle.closeDay}" >
+	         	<f:convertDateTime pattern="EEEE, dd MMM" />
+	        </h:outputText>
+	        
+	        <br/>
+	        <br/>
+	        
+	        <h:outputText value="Open for ordering on " />
+	        <h:outputText value="#{loginBean.currentCycle.orderFirstDay}">
+	        	<f:convertDateTime pattern="EEEE, dd MMM" />
+	        </h:outputText>
+	        
+	        <br/>
+	        <br/>
+	        
+	        <h:outputText value="Last day for ordering is " />
+	        <h:outputText value="#{loginBean.currentCycle.orderLastDay}">
+	        	<f:convertDateTime pattern="EEEE, dd MMM" />
+	        </h:outputText>
+	        
+	        <br/>
+	        <br/>
+	        
+	        <h:outputText value="Shareout day is " />
+	        <h:outputText value="#{loginBean.currentCycle.shareoutDay}">
+	        	<f:convertDateTime pattern="EEEE, dd MMM" />
+	        </h:outputText>
+	    </p:layoutUnit>
+	 
+	</p:layout>
+	</h:body>
+</html>

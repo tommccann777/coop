@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView" listener="#{orderFormBean.loadPricelistProducts}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Coop Order Form</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Nominate products for cycle #{loginBean.currentCycle.cycleNumber}</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+    
+			<h:form id="mainform">
+				<p:growl id="growl_info" showDetail="true" life="4000" severity="info" />
+				<p:growl id="growl_warn" showDetail="false" life="4000" severity="warn" />
+				
+				<p:dataTable id="productsTable" value="#{orderFormBean.pricelistProducts}" var="tempProduct"
+					tableStyle="width:auto"
+					paginator="true" rows="6"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}   {MyContent} {RowsPerPageDropdown}"
+        			rowsPerPageTemplate="6,12,18"
+        			filteredValue="#{orderFormBean.filteredProducts}"
+        			widgetVar="productsTable">
+        			
+        			<f:facet name="{MyContent}">
+       					<p:spacer height="10" />Rows per page:
+   					</f:facet>
+          			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTable').filter()" />
+					</p:outputPanel>
+					</f:facet>
+					
+					<p:column>
+						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.addToOrder(tempProduct)}" type="text/html" >
+							<p:graphicImage value="/resources/images/add.png" title="Add to cart" />
+						</p:commandLink>
+					</p:column>
+					
+					<p:column sortBy="#{tempProduct.supplier}" headerText="Supplier" filterBy="#{tempProduct.supplier}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.supplier}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProduct.productDescription}" headerText="Product" filterBy="#{tempProduct.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.productDescription}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProduct.brand}" headerText="Brand" filterBy="#{tempProduct.brand}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.brand}" />
+					</p:column>
+
+					<p:column headerText="Unit Size" style="text-align:left;">
+						<h:outputText value="#{tempProduct.unitSize}" />
+					</p:column>
+
+					<p:column headerText="Quantity" style="text-align:left;">
+						<h:outputText value="#{tempProduct.quantity}" />
+					</p:column>
+
+					<p:column headerText="Price" style="text-align:left;">
+						<h:outputText value="#{tempProduct.unitTradePrice}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+				</p:dataTable>
+				
+				<br/><br/>
+				<h:commandLink actionListener="#{orderFormBean.excite()}">Excite</h:commandLink>
+				<br/><br/>
+				
+				<h:outputText value="My product nominations" />
+		
+				<p:dataTable id="myPersistentOrder" value="#{orderFormBean.myPersistentOrderLines}" var="myPersistentOrderLine"
+				tableStyle="width:auto"
+				emptyMessage="No products nominated">
+					
+					<p:column style="width:24px">
+						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.removeFromOrder(myPersistentOrderLine)}" type="text/html" >
+							<p:graphicImage value="/resources/images/remove.png" title="Remove from cart" />
+						</p:commandLink>
+					</p:column>
+					
+					<p:column headerText="Supplier" style="text-align:left;">
+						<h:outputText value="#{myPersistentOrderLine.snapshotSupplier}" />
+					</p:column>
+					
+					<p:column headerText="Product" style="text-align:left;">
+						<h:outputText value="#{myPersistentOrderLine.snapshotProductDescription}" />
+					</p:column>
+					
+					<p:column headerText="Brand" style="text-align:left;">
+						<h:outputText value="#{myPersistentOrderLine.snapshotBrand}" />
+					</p:column>
+					
+					<p:column headerText="Unit Size" style="text-align:left;">
+						<h:outputText value="#{myPersistentOrderLine.snapshotUnitSize}" />
+					</p:column>
+					
+					<p:column headerText="Quantity" style="text-align:left;">
+						<h:outputText value="#{myPersistentOrderLine.snapshotQuantity}" />
+					</p:column>
+					
+					<p:column headerText="Price" style="text-align:left;">
+						<h:outputText value="#{myPersistentOrderLine.snapshotUnitTradePrice}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="min Qty" style="text-align:left;">
+						<p:inputText id="persistentMinQty" value="#{myPersistentOrderLine.minQty}" valueChangeListener="#{orderFormBean.handleMinQtyChange}" size="7">
+						<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						<p:ajax />
+						</p:inputText>
+						<p:keyFilter for="persistentMinQty" mask="pnum" />
+					</p:column>
+					
+					<p:column headerText="max Qty" style="text-align:left;">
+						<p:inputText id="persistentMaxQty" value="#{myPersistentOrderLine.maxQty}" valueChangeListener="#{orderFormBean.handleMaxQtyChange}" size="7">
+						<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						<p:ajax />
+						</p:inputText>
+						<p:keyFilter for="persistentMaxQty" mask="pnum" />
+					</p:column>
+					
+				</p:dataTable>
+							
+			</h:form>
+		
+		
+		</div>
+
+	</div>
+
+</h:body>
+</html>

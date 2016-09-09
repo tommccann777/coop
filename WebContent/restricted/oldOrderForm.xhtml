@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{orderFormBean.loadProducts()}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Coop App</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Food Coop Order for Cycle 23</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+
+			<h:form id="mainform">
+				
+				<p:dataTable value="#{orderFormBean.products}" var="tempProduct"
+					selection="#{orderFormBean.selectedProducts}" rowKey="#{tempProduct.id}"
+					paginator="true" rows="6"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} Rows per page: {RowsPerPageDropdown}"
+        			rowsPerPageTemplate="6,12,18"
+        			filteredValue="#{orderFormBean.filteredProducts}"
+        			widgetVar="productsTable">
+        			       			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<h:inputText id="globalFilter" onkeyup="PF('productsTable').filter()" />
+					</p:outputPanel>
+					</f:facet>					
+					
+					
+					<p:column selectionMode="multiple" width="20" />
+					
+					<p:column sortBy="#{tempProduct.productDescription}" headerText="Product" width="320" filterBy="#{tempProduct.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.productDescription}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProduct.category3}" headerText="Brand" width="320" filterBy="#{tempProduct.category3}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.category3}" />
+					</p:column>
+
+					<p:column headerText="Unit Size" width="120">
+						<h:outputText value="#{tempProduct.unitSize}" />
+					</p:column>
+
+					<p:column headerText="Quantity" width="120">
+						<h:outputText value="#{tempProduct.quantity}" />
+					</p:column>
+
+					<p:column headerText="Price" width="120">
+						<h:outputText value="$#{tempProduct.unitTradePrice}" />
+					</p:column>
+					
+					<p:ajax event="rowSelectCheckbox" update=":mainform:selptable" listener="#{orderFormBean.updateOrder}" />
+					<p:ajax event="rowUnselectCheckbox" update=":mainform:selptable" listener="#{orderFormBean.updateOrder}" />
+					<p:ajax event="toggleSelect" update=":mainform:selptable" listener="#{orderFormBean.updateOrder}" />
+
+				</p:dataTable>
+				
+				<h:outputText value="Selected products" />
+				<p:commandButton value="Update" id="com" update="selptable" />
+				<p:commandButton value="Reset" listener="#{orderFormBean.resetSelected()}" />
+		
+				<p:dataTable value="#{orderFormBean.selectedProducts}" var="selectedProduct" id="selptable">
+
+					<p:column headerText="Product" width="320">
+						<h:outputText value="#{selectedProduct.productDescription}" />
+					</p:column>
+					
+					<p:column headerText="Brand" width="320">
+						<h:outputText value="#{selectedProduct.category3}" />
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+
+		</div>
+
+	</div>
+
+</h:body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{orderFormBean.loadAllocations()}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Coop Ordering Allocation</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Order allocation for cycle
+				#{loginBean.currentCycle.cycleNumber}</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+
+			<h:form id="mainform">
+				<p:growl id="growl_info" showDetail="true" life="4000"
+					severity="info" />
+				<p:growl id="growl_warn" showDetail="false" life="4000"
+					severity="warn" />
+
+				<br />
+				<h:outputText value="Product Orders" />
+
+				<p:treeTable id="allocationTreeTable" value="#{orderFormBean.allocations}" var="vAllocationRecord" tableStyle="width:auto">
+					
+        			<p:column headerText="Product" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.codeAndDescription}" />
+					</p:column>
+					<p:column headerText="Unit Size" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.unitsize}" />
+					</p:column>
+					<p:column headerText="Quantity" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.quantity}" />
+					</p:column>
+					<p:column headerText="Price" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.price}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Supplier Qty" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:inputText id="supplierqty_input" value="#{vAllocationRecord.supplierqty}" rendered="#{(vAllocationRecord.rowtype eq 'Product') and (loginBean.hasRole('Ordering'))}" size="7" valueChangeListener="#{orderFormBean.handleSupplierQtyChange}">
+							<p:ajax />
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:inputText>
+						<p:keyFilter for="supplierqty_input" mask="pnum" />
+						
+						<h:outputText id="supplierqty_output" value="#{vAllocationRecord.supplierqty}" rendered="#{!(loginBean.hasRole('Ordering'))}" >
+						<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					
+					
+					<p:column headerText="Member" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.membername}" />
+					</p:column>
+					<p:column headerText="Min Qty" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.minqty}" >
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Max Qty" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:outputText value="#{vAllocationRecord.maxqty}" >
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Allocation" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
+						<h:inputText id="allocation_input" value="#{vAllocationRecord.allocation}" rendered="#{(vAllocationRecord.rowtype eq 'OrderLine') and (loginBean.hasRole('Ordering'))}" size="7" valueChangeListener="#{orderFormBean.handleAllocationChange}">
+							<p:ajax />
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:inputText>
+						<p:keyFilter for="allocation_input" mask="pnum" />
+						
+						<h:outputText id="allocation_output" value="#{vAllocationRecord.allocation}" rendered="#{!(loginBean.hasRole('Ordering'))}" >
+						<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+				</p:treeTable>
+			</h:form>
+
+
+		</div>
+
+	</div>
+
+</h:body>
+</html>

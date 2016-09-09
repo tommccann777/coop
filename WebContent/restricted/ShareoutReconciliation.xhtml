@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{orderFormBean.loadShareoutSlips()}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Shareout Slips</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+	
+	<style>
+	
+	* {
+	font-size: 10pt;
+	}
+	
+	table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid !important;
+        margin: 0;
+        padding: 3px;
+    }
+    
+    
+    div[id="mainform:shareoutSlipTable"] thead {
+	    display:none;
+	}
+	
+	@media print {  
+	  @page {
+	    size: 297mm 210mm; /* landscape */
+	    /* you can also specify margins here: */
+	    margin: 0mm;
+	    margin-right: 0mm; /* for compatibility with both A4 and Letter */
+	  }
+	}
+
+	</style>
+
+</h:head>
+
+<h:body>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+
+			<h:form id="mainform">
+
+				<p:dataTable id="shareoutSlipTable" value="#{orderFormBean.shareoutSlips}" var="shareoutSlip" tableStyle="width:auto">
+					
+					<p:column>
+						<table class="print-friendly" style="margin-top: 10px; margin-bottom:10px">
+						  <tr>
+						  	<td colspan="19" style="border:none"><b><h:outputText value="#{shareoutSlip.productDescription} - #{shareoutSlip.supplierName}" /></b></td>
+						  </tr>
+				          <tr>
+				              <td></td>
+				              <td><h:outputText value="#{orderFormBean.users[0].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[1].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[2].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[3].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[4].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[5].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[6].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[7].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[8].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[9].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[10].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[11].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[12].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[13].shareoutname}"/></td>
+				              <td><h:outputText value="#{orderFormBean.users[14].shareoutname}"/></td>				              
+				              <td><h:outputText value="#{orderFormBean.users[15].shareoutname}"/></td>
+				              <td><h:outputText value="Stock"/></td>
+				              <td><h:outputText value="Total"/></td>
+				          </tr>
+				          <tr>
+				              <td>Ordered</td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[0]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[1]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[2]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[3]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[4]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[5]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[6]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[7]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[8]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[9]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[10]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[11]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[12]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[13]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[14]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>				              
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedMember[15]}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				              <td></td>
+				              <td style="text-align:center"><h:outputText value="#{shareoutSlip.orderedTotal}"><f:converter converterId="bigDecimalPlainDisplay" /></h:outputText></td>
+				          </tr>
+				          <tr>
+				              <td>Received</td>
+				              
+				              <td style="text-align:center">
+						          <h:inputText id="rcvd0" value="#{shareoutSlip.receivedMember[0]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[0].shareoutname}">
+						          	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						          	<p:ajax update="rcvdTotal" />
+						          </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd1" value="#{shareoutSlip.receivedMember[1]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[1].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd2" value="#{shareoutSlip.receivedMember[2]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[2].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd3" value="#{shareoutSlip.receivedMember[3]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[3].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd4" value="#{shareoutSlip.receivedMember[4]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[4].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd5" value="#{shareoutSlip.receivedMember[5]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[5].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd6" value="#{shareoutSlip.receivedMember[6]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[6].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd7" value="#{shareoutSlip.receivedMember[7]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[7].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd8" value="#{shareoutSlip.receivedMember[8]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[8].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd9" value="#{shareoutSlip.receivedMember[9]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[9].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd10" value="#{shareoutSlip.receivedMember[10]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[10].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd11" value="#{shareoutSlip.receivedMember[11]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[11].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd12" value="#{shareoutSlip.receivedMember[12]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[12].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd13" value="#{shareoutSlip.receivedMember[13]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[13].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd14" value="#{shareoutSlip.receivedMember[14]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[14].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd15" value="#{shareoutSlip.receivedMember[15]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[15].shareoutname}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:inputText id="rcvd999" value="#{shareoutSlip.receivedAuctionbox}" size="7" style="text-align:center; border:none" valueChangeListener="#{orderFormBean.handleReceivedChange}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              	<p:ajax update="rcvdTotal" />
+					              </h:inputText>
+				              </td>
+				              
+				              <td style="text-align:center">
+					              <h:outputText id="rcvdTotal" value="#{shareoutSlip.receivedTotal}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+					              </h:outputText>
+				              </td>
+				              
+				              <p:keyFilter for="rcvd0 rcvd1 rcvd2 rcvd3 rcvd4 rcvd5 rcvd6 rcvd7 rcvd8 rcvd9 rcvd10 rcvd11 rcvd12 rcvd13 rcvd14 rcvd15 rcvd999" mask="pnum" />
+				          </tr>
+				      </table>
+					  
+					</p:column>
+										
+				</p:dataTable>
+			</h:form>
+
+
+		</div>
+
+	</div>
+
+</h:body>
+</html>

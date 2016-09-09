@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+	<application>coop-140610</application>
+	<version>0.9</version>
+	<threadsafe>true</threadsafe>
+	<use-google-connector-j>true</use-google-connector-j>
+	<system-properties>
+		<property name="ae-cloudsql.cloudsql-database-url"
+			value="jdbc:google:mysql://coop-140610:asia-east1:coop/coop?user=root&amp;password=admin" />
+		<property name="ae-cloudsql.local-database-url"
+			value="jdbc:mysql://localhost/coop?user=root&amp;PASSWORD=admin&amp;useSSL=false" />
+	</system-properties>
+</appengine-web-app>

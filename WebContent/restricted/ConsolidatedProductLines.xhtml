@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{orderFormBean.loadMyConsolidatedProductLines()}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Coop App 2</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>All Products for cycle #{loginBean.currentCycle.cycleNumber}</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+    
+			<h:form id="mainform">
+				<p:growl id="growl_info" showDetail="true" life="4000" severity="info" />
+				<p:growl id="growl_warn" showDetail="false" life="4000" severity="warn" />
+				
+				<br/>
+				<h:outputText value="All products" />
+		
+				<p:dataTable id="myConsolidatedProductLines" value="#{orderFormBean.myConsolidatedProductLines}" var="vProductLine" tableStyle="width:auto">
+					
+					<p:column headerText="Supplier" style="text-align:left;">
+						<h:outputText value="#{vProductLine.supplier}" />
+					</p:column>
+					
+					<p:column headerText="Product" style="text-align:left;">
+						<h:outputText value="#{vProductLine.productDescription}" />
+					</p:column>
+					
+					<p:column headerText="Unit Size" style="text-align:left;">
+						<h:outputText value="#{vProductLine.unitSize}" />
+					</p:column>
+					
+					<p:column headerText="Quantity" style="text-align:left;">
+						<h:outputText value="#{vProductLine.quantity}" />
+					</p:column>
+					
+					<p:column headerText="Price" style="text-align:left;">
+						<h:outputText value="#{vProductLine.unitTradePrice}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Total Min" style="text-align:left;">
+						<h:outputText value="#{vProductLine.totalMinQty}">
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Total Max" style="text-align:left;">
+						<h:outputText value="#{vProductLine.totalMaxQty}">
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="My Min Qty" style="text-align:left;">
+						<p:inputText id="persistentMinQty" value="#{vProductLine.minQty}" valueChangeListener="#{orderFormBean.handleMinQtyChangeCons}" size="7">
+						<p:ajax />
+						<f:converter converterId="bigDecimalPlainDisplay" />
+						</p:inputText>
+						<p:keyFilter for="persistentMinQty" mask="pnum" />
+					</p:column>
+					
+					<p:column headerText="My Max Qty" style="text-align:left;">
+						<p:inputText id="persistentMaxQty" value="#{vProductLine.maxQty}" valueChangeListener="#{orderFormBean.handleMaxQtyChangeCons}" size="7">
+						<p:ajax />
+						<f:converter converterId="bigDecimalPlainDisplay" />
+						</p:inputText>
+						<p:keyFilter for="persistentMaxQty" mask="pnum" />
+					</p:column>
+					
+				</p:dataTable>
+							
+			</h:form>
+		
+		
+		</div>
+
+	</div>
+
+</h:body>
+</html>

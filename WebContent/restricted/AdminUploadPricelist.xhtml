@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin - Upload Price List</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Admin - Upload Price List</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<h:messages globalOnly="true" />
+    
+			<h:form id="mainform" enctype="multipart/form-data">
+				<p:growl id="growl_info" showDetail="true" life="8000" />
+				
+				<p:fileUpload value="#{pricelistBean.file}" mode="simple" skinSimple="true"/>
+				<br/><br/>
+ 
+    			<p:commandButton value="Upload" ajax="false" actionListener="#{pricelistBean.upload}" disabled="false" />
+    			
+    			<br/><br/>
+    			<p:dataTable value="#{pricelistBean.uploadedProducts}" var="tempProduct"
+    				filteredValue="#{pricelistBean.filteredProducts}"
+        			widgetVar="productsTable" tableStyle="width:auto">
+        			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTable').filter()" />
+					</p:outputPanel>
+					</f:facet>
+					
+					<p:column headerText="Price List" sortBy="#{tempProduct.pricelist}" filterBy="#{tempProduct.pricelist}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.pricelist}" />
+					</p:column>
+					
+					<p:column headerText="Supplier" sortBy="#{tempProduct.supplier}" filterBy="#{tempProduct.supplier}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.supplier}" />
+					</p:column>
+					
+					<p:column headerText="Brand" sortBy="#{tempProduct.brand}" filterBy="#{tempProduct.brand}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.brand}" />
+					</p:column>
+					
+					<p:column headerText="Product Code" sortBy="#{tempProduct.supplierProductCode}" filterBy="#{tempProduct.supplierProductCode}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.supplierProductCode}" />
+					</p:column>
+					
+					<p:column headerText="Description" sortBy="#{tempProduct.productDescription}" filterBy="#{tempProduct.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProduct.productDescription}" />
+					</p:column>
+					
+					<p:column headerText="Unit Size">
+						<h:outputText value="#{tempProduct.unitSize}" />
+					</p:column>
+					
+					<p:column headerText="Quantity">
+						<h:outputText value="#{tempProduct.quantity}" />
+					</p:column>
+					
+					<p:column headerText="Unit Price" sortBy="#{tempProduct.unitTradePrice}">
+						<h:outputText value="#{tempProduct.unitTradePrice}" />
+					</p:column>
+						
+				</p:dataTable>
+    			
+			</h:form>
+		
+		
+		</div>
+
+	</div>
+
+</h:body>
+</html>

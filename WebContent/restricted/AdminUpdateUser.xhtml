@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Admin Update User</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Admin Update User</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+
+			<p:messages globalOnly="true" autoUpdate="true" />			
+    
+			<h:form id="mainform">
+				
+			<h:panelGrid columns="3">
+			
+			<p:outputLabel>Username:</p:outputLabel>
+			<p:inputText value="#{user.username}" id="username" required="true" label="Username" autocomplete="off" />
+			<p:message for="username" />
+			
+			<p:outputLabel>First name:</p:outputLabel>
+			<p:inputText value="#{user.firstname}" id="firstname" required="true" label="First name" autocomplete="off" />
+			<p:message for="firstname" />
+			
+			<p:outputLabel>Last name:</p:outputLabel>
+			<p:inputText value="#{user.lastname}" id="lastname" autocomplete="off" />
+			<p:message for="lastname" />
+			
+			<p:outputLabel title="(Optional) Used on shareout slips">Short name:</p:outputLabel>
+			<p:inputText value="#{user.shortname}" id="shortname" autocomplete="off" maxlength="6" title="(Optional) Used on shareout slips" />
+			<p:message for="shortname" />
+			
+			
+			
+			<p:outputLabel>Email:</p:outputLabel>
+			<p:inputText value="#{user.email}" id="email" required="true" validatorMessage="Not a not valid email address" label ="Email" autocomplete="off">
+				<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+			</p:inputText>
+			<p:message for="email" />
+			
+			<p:outputLabel>Roles:</p:outputLabel>
+			<p:selectManyCheckbox id="roles" layout="grid" columns="2" value="#{user.selectedRoles}">
+		        <f:selectItem itemLabel="Buyer" itemValue="Buyer" />
+		        <f:selectItem itemLabel="Ordering" itemValue="Ordering" />
+		        <f:selectItem itemLabel="Accounts" itemValue="Accounts" />
+		        <f:selectItem itemLabel="ShareOut" itemValue="Shareout" />
+		        <f:selectItem itemLabel="Admin" itemValue="Admin" />
+		    </p:selectManyCheckbox>
+			</h:panelGrid>
+			
+			<br/>
+			<p:outputLabel style="color:red">Specify a password only if a password reset is required, otherwise leave blank</p:outputLabel>
+			
+			<h:panelGrid columns="3">
+			<p:outputLabel>Password:</p:outputLabel>
+			<p:inputText value="#{user.password}" id="password" label="Password" validatorMessage="Password must be at least 6 characters" autocomplete="off">
+				<f:validateLength minimum="6" />
+			</p:inputText>
+			<p:message for="password" />
+			</h:panelGrid>
+			
+			<h:inputHidden value="#{user.id}" />
+			<h:inputHidden value="#{user.emailpublic}" />
+			<h:inputHidden value="#{user.receiveemail}" />
+			<h:inputHidden value="#{user.homephone}" />
+			<h:inputHidden value="#{user.homephonepublic}" />
+			<h:inputHidden value="#{user.mobilephone}" />
+			<h:inputHidden value="#{user.mobilephonepublic}" />
+			<h:inputHidden value="#{user.receivetxt}" />
+			<h:inputHidden value="#{user.address1}" />
+			<h:inputHidden value="#{user.address2}" />
+			<h:inputHidden value="#{user.address3}" />
+			<h:inputHidden value="#{user.postcode}" />
+			<h:inputHidden value="#{user.addresspublic}" />
+			<h:inputHidden value="#{user.altcontactname}" />
+			<h:inputHidden value="#{user.altcontactphone}" />
+			<h:inputHidden value="#{user.altcontactemail}" />
+			<h:inputHidden value="#{user.altcontactpublic}" />
+			
+			<br/>
+			<p:commandButton value="Save" update="mainform" action="#{userBean.updateUser(user)}" />
+			<h:outputText value="&#160;" />
+			<p:commandButton value="Cancel" action="AdminUsers" immediate="true" />
+			
+			</h:form>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

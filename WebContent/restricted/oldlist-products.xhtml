@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<f:metadata>
+  <f:event type="preRenderView" listener="#{orderFormBean.loadProducts()}"/>
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Coop App</title>
+	
+	<h:outputStylesheet library="css" name="style.css"  />
+	
+</h:head>
+
+<h:body>
+
+	<div id="wrapper">
+		<div id="header">
+			<h2>Waiheke General Coop</h2>
+		</div>
+	</div>
+
+	<div id="container">
+
+		<div id="content">
+		
+			<h:messages globalOnly="true" />
+		
+			<h:form>
+						
+			<h:dataTable value="#{orderFormBean.products}" var="tempProduct"
+				styleClass="demo-table" 
+				headerClass="demo-table-header"
+				rowClasses="demo-table-odd-row,demo-table-even-row">
+
+				<h:column>
+					<f:facet name="header">Select</f:facet>
+
+					#{tempProduct.productList_ID}
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Product ID</f:facet>
+
+					#{tempProduct.id}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Category 1</f:facet>
+
+					#{tempProduct.category1}
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Category 2</f:facet>
+
+					#{tempProduct.category2}
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Category 3</f:facet>
+
+					#{tempProduct.category3}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Supplier ID</f:facet>
+
+					#{tempProduct.supplierId}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Supplier Product CodeID</f:facet>
+
+					#{tempProduct.supplierProductCode}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Product Description</f:facet>
+
+					#{tempProduct.productDescription}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Unit Size</f:facet>
+
+					#{tempProduct.unitSize}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Quantity</f:facet>
+
+					#{tempProduct.quantity}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Unit Trade Price</f:facet>
+
+					#{tempProduct.unitTradePrice}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Product List ID</f:facet>
+
+					#{tempProduct.productList_ID}
+				</h:column>
+				
+				
+
+			</h:dataTable>
+
+			</h:form>
+
+		</div>
+		
+	</div>
+
+</h:body>
+</html>
