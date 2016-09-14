@@ -61,7 +61,9 @@
 					</p:column>
 					
 					<p:column headerText="Supplier Qty" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
-						<h:inputText id="supplierqty_input" value="#{vAllocationRecord.supplierqty}" rendered="#{(vAllocationRecord.rowtype eq 'Product') and (loginBean.hasRole('Ordering'))}" size="7" valueChangeListener="#{orderFormBean.handleSupplierQtyChange}">
+						<h:inputText id="supplierqty_input" value="#{vAllocationRecord.supplierqty}" rendered="#{(vAllocationRecord.rowtype eq 'Product') and (loginBean.hasRole('Ordering'))}"
+						size="7" valueChangeListener="#{orderFormBean.handleSupplierQtyChange}"
+						disabled="#{vAllocationRecord.supplier eq 'Stock'}">
 							<p:ajax />
 							<f:converter converterId="bigDecimalPlainDisplay" />
 						</h:inputText>

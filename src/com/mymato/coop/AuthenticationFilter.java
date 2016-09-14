@@ -24,6 +24,8 @@ public class AuthenticationFilter implements Filter {
 
 	  public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
 		  
+		  logger.info("HttpServletRequest received");
+		  
 		  // Save the requested destination
 		  String requestURI = ((HttpServletRequest) req).getRequestURI();
 		  //logger.info("cooplog doFilter: requestURI=" + requestURI);

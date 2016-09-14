@@ -261,8 +261,9 @@ public class ProductDAO {
 		}
 	}
 	
-	// copy a product record to the nominated product table
+	// copy a pricelist product record to the nominated product table
 	public NominatedProduct copyProductToNominatedProduct(PricelistProduct p, int cycleNumber) throws Exception {
+		
 		// first check to see if the product is already in the nominated product table
 		NominatedProduct np;	// nominated product object
 		int newRecordId;		// id of the newly created nominated product record
@@ -301,18 +302,20 @@ public class ProductDAO {
 				boolean valid = myRs.getBoolean("Valid");
 				int cycleNum = myRs.getInt("CycleNumber");
 				int pricelistProductId = myRs.getInt("PricelistProductID");
-				int stockId = myRs.getInt("StockID");
+				BigDecimal stockQuantity = myRs.getBigDecimal("StockQuantity");
+				BigDecimal invoicedUnitTradePrice = myRs.getBigDecimal("InvoicedUnitTradePrice");
 
 				// create new nominated product object
 				np = new NominatedProduct(id, pricelist, supplier, brand, supplierProductCode,
-						productDescription, unitSize, quantity, unitTradePrice, valid, cycleNum, pricelistProductId, stockId);
+						productDescription, unitSize, quantity, unitTradePrice, valid, cycleNum,
+						pricelistProductId, stockQuantity, invoicedUnitTradePrice);
 			}
 			
 		} catch (Exception exc) {
 			throw new Exception("Could not copy pricelist product to nominatedproduct table for product: " + p.getId());
 		}			
 		
-		// if it is not then add it
+		// if it is not present, then add it
 		if (np == null) {
 			logger.info("No nominated product found, so inserting one for product id=" + p.getId());
 			// insert the new record in the nominated product table
@@ -320,8 +323,9 @@ public class ProductDAO {
 				myConn = getConnection();
 
 				String sql = "insert into coop.nominatedproduct "
-						+ "(Pricelist, Supplier, Brand, SupplierProductCode, ProductDescription, UnitSize, Quantity, UnitTradePrice, Valid, CycleNumber, PricelistProductID, StockID)"
-						+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						+ "(Pricelist, Supplier, Brand, SupplierProductCode, ProductDescription, UnitSize, Quantity, "
+						+ "UnitTradePrice, Valid, CycleNumber, PricelistProductID) "
+						+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 				myStmt = myConn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -338,7 +342,9 @@ public class ProductDAO {
 				myStmt.setBoolean(9, p.isValid());
 				myStmt.setInt(10, cycleNumber);
 				myStmt.setInt(11, p.getId());
-				myStmt.setInt(12,  0);
+
+				// 12. we don't have any stock quantity, so leave StockQuantity as null
+				// 13. we don't know the final invoice price yet, so leave InvoicedUnitTradePrice as null
 				
 				logger.info("About to execute " + myStmt.toString());
 				myStmt.execute();
@@ -371,7 +377,7 @@ public class ProductDAO {
 			int pricelistProductId = p.getId();
 			
 			np = new NominatedProduct(id, pricelist, supplier, brand, supplierProductCode,
-					productDescription, unitSize, quantity, unitTradePrice, valid, cycleNum, pricelistProductId, 0);
+					productDescription, unitSize, quantity, unitTradePrice, valid, cycleNum, pricelistProductId, null, null);
 			
 			logger.info("Created the nominated product object with id=" + np.getId());
 		}
@@ -422,11 +428,13 @@ public class ProductDAO {
 				boolean valid = myRs.getBoolean("Valid");
 				int cycleNumber = myRs.getInt("CycleNumber");
 				int pricelistProductId = myRs.getInt("PricelistProductId");
-				int stockId = myRs.getInt("StockID");
+				BigDecimal stockQuantity = myRs.getBigDecimal("StockQuantity");
+				BigDecimal invoicedUnitTradePrice = myRs.getBigDecimal("invoicedUnitTradePrice");
 
 				// create new nominated product object
 				theProduct = new NominatedProduct(id, pricelist, supplier, brand, supplierProductCode,
-						productDescription, unitSize, quantity, unitTradePrice, valid, cycleNumber, pricelistProductId, stockId);
+						productDescription, unitSize, quantity, unitTradePrice, valid, cycleNumber, 
+						pricelistProductId, stockQuantity, invoicedUnitTradePrice);
 			}
 			else {
 				throw new Exception("Could not find nominated product id: " + productId);
@@ -436,6 +444,30 @@ public class ProductDAO {
 		}
 		finally {
 			close (myConn, myStmt, myRs);
+		}
+	}
+	
+	// update the invoice price on nominated product
+	public void updateInvoicePriceNominatedProduct(int nominatedProductId, BigDecimal newValue) throws Exception {
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		
+		try {
+			myConn = getConnection();
+
+			String sql = "update coop.nominatedproduct set InvoicedUnitTradePrice=? where ID=?";
+
+			myStmt = myConn.prepareStatement(sql);
+			
+			// set parameters
+			myStmt.setBigDecimal(1, newValue);
+			myStmt.setInt(2, nominatedProductId);
+			
+			myStmt.execute();
+
+		}
+		finally {
+			close (myConn, myStmt);
 		}
 	}
 

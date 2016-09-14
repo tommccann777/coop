@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 
 public class NominatedProduct extends PricelistProduct {
 	
-	private int pricelistProductId;		// foreign key to pricelist product
-	private int cycleNumber;			// the cycle in which the product was nominated
-	private int stockId;				// foreign key to the Stock record
+	private int pricelistProductId;				// foreign key to pricelist product
+	private int cycleNumber;					// the cycle in which the product was nominated
+	private BigDecimal stockQuantity;			// amount of stock held
+	private BigDecimal invoicedUnitTradePrice;	// the final price of the product from the supplier invoice
 
 	public NominatedProduct() {
 		// TODO Auto-generated constructor stub
@@ -14,14 +15,15 @@ public class NominatedProduct extends PricelistProduct {
 
 	public NominatedProduct(int id, String pricelist, String supplier, String brand, String supplierProductCode,
 			String productDescription, String unitSize, String quantity, BigDecimal unitTradePrice, boolean valid,
-			int cycleNumber, int pricelistProductId, int stockId) {
+			int cycleNumber, int pricelistProductId, BigDecimal stockQuantity, BigDecimal invoicedUnitTradePrice) {
 		
 		super(id, pricelist, supplier, brand, supplierProductCode, productDescription, unitSize, quantity,
 				unitTradePrice, valid);
 		
 		this.cycleNumber = cycleNumber;
 		this.pricelistProductId = pricelistProductId;
-		this.stockId = stockId;
+		this.stockQuantity = stockQuantity;
+		this.invoicedUnitTradePrice = invoicedUnitTradePrice;
 	}
 
 	public int getPricelistProductId() {
@@ -40,12 +42,20 @@ public class NominatedProduct extends PricelistProduct {
 		this.cycleNumber = cycleNumber;
 	}
 
-	public int getStockId() {
-		return stockId;
+	public BigDecimal getStockQuantity() {
+		return stockQuantity;
 	}
 
-	public void setStockId(int stockId) {
-		this.stockId = stockId;
+	public void setStockQuantity(BigDecimal stockQuantity) {
+		this.stockQuantity = stockQuantity;
+	}
+
+	public BigDecimal getInvoicedUnitTradePrice() {
+		return invoicedUnitTradePrice;
+	}
+
+	public void setInvoicedUnitTradePrice(BigDecimal invoicedUnitTradePrice) {
+		this.invoicedUnitTradePrice = invoicedUnitTradePrice;
 	}
 
 }

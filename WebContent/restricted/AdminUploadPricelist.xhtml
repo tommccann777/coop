@@ -37,7 +37,7 @@
     			<p:commandButton value="Upload" ajax="false" actionListener="#{pricelistBean.upload}" disabled="false" />
     			
     			<br/><br/>
-    			<p:dataTable value="#{pricelistBean.uploadedProducts}" var="tempProduct"
+    			<p:dataTable value="#{pricelistBean.uploadedPricelistProducts}" var="tempProduct"
     				filteredValue="#{pricelistBean.filteredProducts}"
         			widgetVar="productsTable" tableStyle="width:auto">
         			

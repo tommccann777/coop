@@ -84,7 +84,7 @@ public class Cycle {
 	}
 	
 	public String getStrStartDay() {
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MMM-yyyy");
 	    String strDate = sdfDate.format(startDay);
 	    
 	    return strDate;
@@ -121,6 +121,13 @@ public class Cycle {
 	public void setCloseDay(Date closeDay) {
 		this.closeDay = closeDay;
 	}
+	
+	public String getStrCloseDay() {
+		SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MMM-yyyy");
+	    String strDate = sdfDate.format(closeDay);
+	    
+	    return strDate;
+	}
 
 	public String getBannerMessage() {
 		return bannerMessage;
@@ -136,6 +143,10 @@ public class Cycle {
 
 	public void setShareoutLocation(String shareoutLocation) {
 		this.shareoutLocation = shareoutLocation;
+	}
+	
+	public String getCycleDescriptor() {
+		return "Cycle " + cycleNumber + " (" + this.getStrStartDay() + " to " + this.getStrCloseDay() + ")";
 	}
 
 }

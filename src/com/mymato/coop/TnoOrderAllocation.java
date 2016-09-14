@@ -49,11 +49,29 @@ public class TnoOrderAllocation {
 
 
 	public String getCodeAndDescription() {
+		String result = null;
+		
 		if (rowtype.equals("Product")) {
-			return productcode + " - " + productdescription;
+			if (supplier.equals("Stock")) {
+				// If a Stock item
+				result = "Stock - " + productdescription;
+			} else {
+				// If a supplier item
+				if (productcode.equals("")) {
+					// Supplier item, productcode blank
+					result = productdescription;
+				} else {
+					// Supplier item with productcode
+					result = productcode + " - " + productdescription;
+				}
+				
+			}
+			
 		} else {
-			return "";
-		}		
+			result = "";
+		}
+		
+		return result;
 	}
 	
 	public String getRowtype() {

@@ -13,13 +13,16 @@ public class VShareoutOrderLine {
 	private String memberName;
 	private BigDecimal allocated;
 	private BigDecimal received;
+	private BigDecimal invoicedUnitTradePrice;
+	private BigDecimal stockQuantity;
 
 	public VShareoutOrderLine() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public VShareoutOrderLine(int orderLineId, int nominatedProductId, String supplierName, String supplierProductCode,
-			String productDescription, int memberId, String memberName, BigDecimal allocated, BigDecimal received) {
+			String productDescription, int memberId, String memberName, BigDecimal allocated, BigDecimal received,
+			BigDecimal invoicedUnitTradePrice, BigDecimal stockQuantity) {
 		super();
 		this.orderLineId = orderLineId;
 		this.nominatedProductId = nominatedProductId;
@@ -30,6 +33,8 @@ public class VShareoutOrderLine {
 		this.memberName = memberName;
 		this.allocated = allocated;
 		this.received = received;
+		this.invoicedUnitTradePrice = invoicedUnitTradePrice;
+		this.stockQuantity = stockQuantity;
 	}
 
 	public int getOrderLineId() {
@@ -103,4 +108,21 @@ public class VShareoutOrderLine {
 	public void setReceived(BigDecimal received) {
 		this.received = received;
 	}
+
+	public BigDecimal getInvoicedUnitTradePrice() {
+		return invoicedUnitTradePrice;
+	}
+
+	public void setInvoicedUnitTradePrice(BigDecimal invoicedUnitTradePrice) {
+		this.invoicedUnitTradePrice = invoicedUnitTradePrice;
+	}
+
+	public BigDecimal getStockQuantity() {
+		return stockQuantity;
+	}
+
+	public void setStockQuantity(BigDecimal stockQuantity) {
+		this.stockQuantity = stockQuantity;
+	}
+	
 }

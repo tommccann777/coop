@@ -52,6 +52,8 @@
 					<p:outputPanel>
 						<h:outputText value="Search all fields:" />
 						<p:inputText id="globalFilter" onkeyup="PF('productsTable').filter()" />
+						<h:outputText value=" " />
+						<p:commandButton value="Clear searches" onclick="PF('productsTable').clearFilters()" />
 					</p:outputPanel>
 					</f:facet>
 					
@@ -89,8 +91,6 @@
 					
 				</p:dataTable>
 				
-				<br/><br/>
-				<h:commandLink actionListener="#{orderFormBean.excite()}">Excite</h:commandLink>
 				<br/><br/>
 				
 				<h:outputText value="My product nominations" />

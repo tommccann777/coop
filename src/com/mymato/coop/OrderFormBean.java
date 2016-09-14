@@ -14,6 +14,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.validator.ValidatorException;
 
 import org.primefaces.component.api.UIData;
 import org.primefaces.component.treetable.TreeTable;
@@ -29,7 +30,6 @@ public class OrderFormBean implements Serializable {
 	private static final int MAX_PRODUCTS = 8;
 	
 	private List<PricelistProduct> pricelistProducts;
-	//private List<OrderLine> myOrderLines;
 	private List<OrderLine> myPersistentOrderLines;
 	private TreeNode allocations;
 	
@@ -264,6 +264,52 @@ public class OrderFormBean implements Serializable {
 		return treeSupplierOrderLines;
 	}
 	
+	// V A L I D A T O R S
+	
+	// this applies validation to a Stock product to check if total buyer units exceed the stock available
+	public void validateReconciliationReceived(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+		
+		BigDecimal stock;
+		BigDecimal total = new BigDecimal(0.0);
+		
+		// only applies to Stock products so return if not a stock product
+		
+		logger.info("Running validator validateReconciliationReceived");
+		
+		BigDecimal newValue = (BigDecimal) value;
+		
+		UIData data = (UIData) component.findComponent("shareoutSlipTable");
+		ShareoutSlip s = (ShareoutSlip) data.getRowData();
+		String uicFieldname = component.getId();
+		int fieldNum = Integer.parseInt(uicFieldname.substring("rcvd".length()));
+		
+		// validation only applies to stock items
+		if (s.getSupplierName().equals("Stock")) {
+			// Get the (proposed) total of units for this product
+			total = s.getReceivedTotal();
+			
+			// Subtract the current field value
+			if (s.getReceivedMember()[fieldNum] != null) {
+				total = total.subtract(s.getReceivedMember()[fieldNum]);
+			}		
+			
+			// add in the newValue
+			total = total.add(newValue);
+			
+			// amount of available stock
+			stock = s.getStockQuantity();
+			
+			logger.info("validateReconciliationReceived: total = " + total + ", stock = " + stock);
+			
+			if (total.compareTo(stock) > 0) {  // total > stock
+				String msg = "The total received for " + s.getProductDescription() + " is " + total + ", which is greater then the stock available (" + stock + ")";
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+			}
+			
+		}
+
+	}
+	
 	
 	// S H A R E O U T   S L I P S
 	// For the shareout slip view, 2 methods: loadShareoutSlips and getShareoutSlips
@@ -354,6 +400,9 @@ public class OrderFormBean implements Serializable {
 				currentShareoutSlip.setProductDescription(vsool.getProductDescription());
 				//logger.info(">>>>> ProductDescription=" + currentShareoutSlip.getProductDescription());
 				
+				currentShareoutSlip.setInvoicedUnitTradePrice(vsool.getInvoicedUnitTradePrice());
+				currentShareoutSlip.setStockQuantity(vsool.getStockQuantity());
+				
 				// add to the list of shareoutSlips
 				shareoutSlips.add(currentShareoutSlip);
 				
@@ -374,7 +423,13 @@ public class OrderFormBean implements Serializable {
 			if (userIndex != -1 && userIndex < ShareoutSlip.MAX_MEMBERS) {
 				currentShareoutSlip.setOrderedMember(vsool.getAllocated(), userIndex);
 				currentShareoutSlip.setReceivedMember(vsool.getReceived(), userIndex);
-			}			
+			}
+			
+			// refresh the orderedTotal
+			currentShareoutSlip.refreshOrderedTotal();
+
+			// refresh the receivedTotal
+			currentShareoutSlip.refreshReceivedTotal();
 			
 		}
 		
@@ -391,6 +446,7 @@ public class OrderFormBean implements Serializable {
 				}					
 			}
 		}
+		
 		
 		logger.info("cooplog loadShareoutSlips: checkpoint 3");
 		
@@ -466,10 +522,35 @@ public class OrderFormBean implements Serializable {
 		
 	}
 	
-	// Shareout received value changed
+	
+	// ShareoutReconciliation page, invoicedUnitTradePrice field change
+	public void handleInvoicePriceChange(ValueChangeEvent vcEvent) {
+		logger.info("In handleInvoicePriceChange");
+			
+		UIData data = (UIData) vcEvent.getComponent().findComponent("shareoutSlipTable");
+		ShareoutSlip s = (ShareoutSlip) data.getRowData();
+		BigDecimal newValue = (BigDecimal) vcEvent.getNewValue();
+		
+		try {
+			
+			productDAO.updateInvoicePriceNominatedProduct(s.getNominatedProductId(), newValue);
+			
+		} catch (Exception exc) {
+			// send this to server logs
+			logger.log(Level.SEVERE, "cooplog: Error updating Invoiced Price", exc);
+			
+			// add error message for JSF page
+			addErrorMessage(exc);
+		}
+		
+		
+	}
+		
+	
+	// ShareoutReconciliation page, received value changed
 	public void handleReceivedChange(ValueChangeEvent vcEvent) {
 		
-		logger.info("cooplog: Handling Received change");
+		logger.info("cooplog handleReceivedChange: Handling Received change");
 		
 		// which cycle are we in?
 		Cycle currentCycle = (Cycle) ApplicationMapHelper.getValueFromApplicationMap(ApplicationMapHelper.CYCLE_KEY);
@@ -477,13 +558,13 @@ public class OrderFormBean implements Serializable {
 		UIData data = (UIData) vcEvent.getComponent().findComponent("shareoutSlipTable");
 		ShareoutSlip s = (ShareoutSlip) data.getRowData();
 		String clientId = data.getClientId();
-		logger.info("cooplog: data ClientId=" + clientId);
+		logger.info("cooplog handleReceivedChange: data ClientId=" + clientId);
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		UIComponent uic = UIComponent.getCurrentComponent(context);	// User Interface Component
 
 		String uicClientId = uic.getClientId(context);
-		logger.info("cooplog: uic ClientId=" + uicClientId);
+		logger.info("cooplog handleReceivedChange: uic ClientId=" + uicClientId);
 		
 		String uicFieldname = uic.getId();
 		int fieldNum = Integer.parseInt(uicFieldname.substring("rcvd".length()));
@@ -497,6 +578,7 @@ public class OrderFormBean implements Serializable {
 		BigDecimal newValue = (BigDecimal) vcEvent.getNewValue();
 		BigDecimal oldValue = (BigDecimal) vcEvent.getOldValue();
 		
+		logger.info("cooplog handleReceivedChange: New value is " + newValue);
 		// 
 		if (fieldNum == 999) {
 			// Auction box - add to the stock table
@@ -515,6 +597,7 @@ public class OrderFormBean implements Serializable {
 					// update the orderLine with the new value
 					o.setReceived(newValue);
 					
+					logger.info("cooplog handleReceivedChange: about to update order line");
 					// update the database
 					orderLineDAO.updateOrderLine(o);
 					
@@ -545,7 +628,8 @@ public class OrderFormBean implements Serializable {
 			}
 		}	// end of update orderline for user received
 		
-		
+		// refresh the receivedTotal
+		s.refreshReceivedTotal();
 		
 		logger.info("The new received auction box is " + s.getReceivedTotal());
 	}
@@ -957,8 +1041,8 @@ public class OrderFormBean implements Serializable {
 
 		try {
 			logger.info("About to call orderLineDAO.getMyOrderLines(" + cycleNumber + ", " + memberId + ")");
-			// get all orderLines from database
-			myPersistentOrderLines = orderLineDAO.getMyOrderLines(cycleNumber, memberId);
+			// get all orderLines that don't include Stock
+			myPersistentOrderLines = orderLineDAO.getMyOrderLines(cycleNumber, memberId, false);
 			logger.info("Returned from orderLineDAO.getMyOrderLines(" + cycleNumber + ", " + memberId + ") with " + myPersistentOrderLines.size() + " order lines");
 		} catch (Exception exc) {
 			// send this to server logs
@@ -1042,8 +1126,8 @@ public class OrderFormBean implements Serializable {
 	public void loadAllocations() {
 		
 		// No need to do anything if allocations list already populated
-		if (allocations != null)
-			return;
+		// if (allocations != null)
+		//	return;
 		
 		Cycle currentCycle = (Cycle) ApplicationMapHelper.getValueFromApplicationMap(ApplicationMapHelper.CYCLE_KEY);
 		

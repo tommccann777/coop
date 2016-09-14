@@ -68,7 +68,7 @@
 						  <tr>
 						  	<td colspan="15" style="border:none">
 						  	<b>
-						  	<h:outputText value="#{shareoutSlip.productDescription} - #{shareoutSlip.supplierName} - #{shareoutSlip.nominatedProductId}" />
+						  	<h:outputText value="#{shareoutSlip.productDescription} - #{shareoutSlip.supplierName}" />
 						  	<h:outputText value=" (" rendered="#{shareoutSlip.supplierName=='Stock'}" />
 						  	<h:outputText value="#{shareoutSlip.stockQuantity}" rendered="#{shareoutSlip.supplierName=='Stock'}">
 						  		<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
@@ -131,136 +131,154 @@
 				              <td>Received</td>
 				              
 				              <td style="text-align:center">
-						          <h:inputText id="rcvd0" value="#{shareoutSlip.receivedMember[0]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[0].shareoutname}">
+						          <h:inputText id="rcvd0" value="#{shareoutSlip.receivedMember[0]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[0].shareoutname}"
+						          validator="#{orderFormBean.validateReconciliationReceived}">
 						          	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-						          	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+						          	<p:ajax update="rcvdTotal validatorMessage" />
 						          </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd1" value="#{shareoutSlip.receivedMember[1]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[1].shareoutname}">
+					              <h:inputText id="rcvd1" value="#{shareoutSlip.receivedMember[1]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[1].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd2" value="#{shareoutSlip.receivedMember[2]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[2].shareoutname}">
+					              <h:inputText id="rcvd2" value="#{shareoutSlip.receivedMember[2]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[2].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd3" value="#{shareoutSlip.receivedMember[3]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[3].shareoutname}">
+					              <h:inputText id="rcvd3" value="#{shareoutSlip.receivedMember[3]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[3].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd4" value="#{shareoutSlip.receivedMember[4]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[4].shareoutname}">
+					              <h:inputText id="rcvd4" value="#{shareoutSlip.receivedMember[4]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[4].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd5" value="#{shareoutSlip.receivedMember[5]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[5].shareoutname}">
+					              <h:inputText id="rcvd5" value="#{shareoutSlip.receivedMember[5]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[5].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd6" value="#{shareoutSlip.receivedMember[6]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[6].shareoutname}">
+					              <h:inputText id="rcvd6" value="#{shareoutSlip.receivedMember[6]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[6].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd7" value="#{shareoutSlip.receivedMember[7]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[7].shareoutname}">
+					              <h:inputText id="rcvd7" value="#{shareoutSlip.receivedMember[7]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[7].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd8" value="#{shareoutSlip.receivedMember[8]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[8].shareoutname}">
+					              <h:inputText id="rcvd8" value="#{shareoutSlip.receivedMember[8]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[8].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd9" value="#{shareoutSlip.receivedMember[9]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[9].shareoutname}">
+					              <h:inputText id="rcvd9" value="#{shareoutSlip.receivedMember[9]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[9].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd10" value="#{shareoutSlip.receivedMember[10]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[10].shareoutname}">
+					              <h:inputText id="rcvd10" value="#{shareoutSlip.receivedMember[10]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[10].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd11" value="#{shareoutSlip.receivedMember[11]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[11].shareoutname}">
+					              <h:inputText id="rcvd11" value="#{shareoutSlip.receivedMember[11]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[11].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd12" value="#{shareoutSlip.receivedMember[12]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[12].shareoutname}">
+					              <h:inputText id="rcvd12" value="#{shareoutSlip.receivedMember[12]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[12].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd13" value="#{shareoutSlip.receivedMember[13]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[13].shareoutname}">
-					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              <h:inputText id="rcvd13" value="#{shareoutSlip.receivedMember[13]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[13].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero"
+					              	validator="#{orderFormBean.validateReconciliationReceived}" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd14" value="#{shareoutSlip.receivedMember[14]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[14].shareoutname}">
-					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              <h:inputText id="rcvd14" value="#{shareoutSlip.receivedMember[14]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[14].shareoutname}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
+					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero"
+					              	validator="#{orderFormBean.validateReconciliationReceived}" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
-					              <h:inputText id="rcvd15" value="#{shareoutSlip.receivedMember[15]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[15].shareoutname}">
+					              <h:inputText id="rcvd15" value="#{shareoutSlip.receivedMember[15]}" size="7" style="text-align:center; border:none; background-color:#ffffff;" valueChangeListener="#{orderFormBean.handleReceivedChange}" disabled="#{empty orderFormBean.users[15].shareoutname}"
+					              	validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
 				              <td style="text-align:center">
 					              <h:inputText id="rcvd999" value="#{shareoutSlip.receivedAuctionbox}" size="7" style="text-align:center; border:none"
-					              valueChangeListener="#{orderFormBean.handleReceivedChange}">
+					              valueChangeListener="#{orderFormBean.handleReceivedChange}"
+					              validator="#{orderFormBean.validateReconciliationReceived}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
-					              	<p:ajax update="rcvdTotal toolTipQtyWarning" />
+					              	<p:ajax update="rcvdTotal validatorMessage" />
 					              </h:inputText>
 				              </td>
 				              
-				              <td style="text-align:center;">
-					              <h:outputText id="rcvdTotal" value="#{shareoutSlip.receivedTotal}" style="#{shareoutSlip.receivedTotal > shareoutSlip.stockQuantity ? 'background-color: #FFC0CB; color: #f00; padding: 5px; font-weight: bold;' : 'background-color: #fff;'}">
+				              <td style="text-align:center">
+					              <h:outputText id="rcvdTotal" value="#{shareoutSlip.receivedTotal}">
 					              	<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
 					              </h:outputText>
-					              <p:tooltip id="toolTipQtyWarning" for="rcvdTotal" value="Total received is greater than stock available" position="top"
-					              rendered="#{shareoutSlip.receivedTotal > shareoutSlip.stockQuantity}" />
 				              </td>
 				              
 				              <p:keyFilter for="rcvd0 rcvd1 rcvd2 rcvd3 rcvd4 rcvd5 rcvd6 rcvd7 rcvd8 rcvd9 rcvd10 rcvd11 rcvd12 rcvd13 rcvd14 rcvd15 rcvd999 finalPrice" mask="pnum" />
 				          </tr>
 				      </table>
+				      <h:messages id="validatorMessage" style="color:red; list-style-type:none; margin:0; padding:0;" />
 				      
 					  
 					</p:column>

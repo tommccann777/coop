@@ -68,12 +68,14 @@ public class OrderLineDAO {
 						+ ", usr.Username "
 						+ ", ol.Allocation "
 						+ ", ol.Received "
+						+ ", prd.InvoicedUnitTradePrice "
+						+ ", prd.StockQuantity "
 						+ "from coop.orderline as ol "
 						+ "left join coop.nominatedproduct as prd "
 						+ "on ol.NominatedProductID = prd.ID "
 						+ "left join coop.user as usr "
 						+ "on ol.MemberID = usr.ID "
-						+ "where ol.CycleNumber = ? and ol.Allocation > 0 "
+						+ "where ol.CycleNumber = ? " //  and ol.Allocation > 0
 						+ "order by prd.Supplier, prd.SupplierProductCode";
 
 			myStmt = myConn.prepareStatement(sql);
@@ -97,9 +99,12 @@ public class OrderLineDAO {
 				String username = myRs.getString("Username");
 				BigDecimal allocation = myRs.getBigDecimal("Allocation");
 				BigDecimal received = myRs.getBigDecimal("Received");
+				BigDecimal invoicedUnitTradePrice = myRs.getBigDecimal("InvoicedUnitTradePrice");
+				BigDecimal stockQuantity = myRs.getBigDecimal("StockQuantity");
 
 				VShareoutOrderLine tempvShareoutOrderLine = new VShareoutOrderLine(orderlineid, productid, suppliername, 
-						supplierproductcode, productdescription, memberid, username, allocation, received);
+						supplierproductcode, productdescription, memberid, username, allocation, received,
+						invoicedUnitTradePrice, stockQuantity);
 
 				// add it to the list of OrderLine
 				vshareoutorderlines.add(tempvShareoutOrderLine);
@@ -113,20 +118,96 @@ public class OrderLineDAO {
 	}
 	
 	
-	
-	// get all orderLines for a cycle for a member
-	public List<OrderLine> getMyOrderLines(int aCycleNumber, int aMemberID) throws Exception {
+	// get all orderLines for a cycle - with or without stock items included
+	public List<OrderLine> getOrderLines(int aCycleNumber, boolean includeStock) throws Exception {
 
 		List<OrderLine> orderlines = new ArrayList<>();
 
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
 		ResultSet myRs = null;
+		String sql = null;
 		
 		try {
 			myConn = getConnection();
 
-			String sql = "select * from coop.orderline where CycleNumber=? and MemberID=? order by NominatedProductID";
+			if (includeStock == true) {
+				sql = "select * from coop.orderline where CycleNumber=? order by NominatedProductID";
+			} else {
+				sql = "select * from coop.orderline where CycleNumber=? and SnapshotSupplier <> 'Stock' order by NominatedProductID";
+			}
+			
+
+			myStmt = myConn.prepareStatement(sql);
+
+			// set parameters
+			myStmt.setInt(1, aCycleNumber);
+			
+			logger.info("OrderLineDAO.getOrderLines: About to execute sql: " + myStmt.toString());
+
+			myRs = myStmt.executeQuery();
+
+			// process result set
+			while (myRs.next()) {
+				
+				int id = myRs.getInt("ID");
+				int cycleNumber = myRs.getInt("CycleNumber");
+				int memberId = myRs.getInt("MemberID");
+				int productId = myRs.getInt("NominatedProductID");
+				BigDecimal minQty = myRs.getBigDecimal("MinQty");
+				BigDecimal maxQty = myRs.getBigDecimal("MaxQty");
+				BigDecimal allocation = myRs.getBigDecimal("Allocation");
+				BigDecimal received = myRs.getBigDecimal("Received");
+				
+				String snapshotPricelist = myRs.getString("SnapshotPricelist");
+				String snapshotSupplier = myRs.getString("SnapshotSupplier");
+				String snapshotBrand = myRs.getString("SnapshotBrand");
+				String snapshotSupplierProductCode = myRs.getString("SnapshotSupplierProductCode");
+				String snapshotProductDescription = myRs.getString("SnapshotProductDescription");
+				String snapshotUnitSize = myRs.getString("SnapshotUnitSize");
+				String snapshotQuantity = myRs.getString("SnapshotQuantity");
+				BigDecimal snapshotUnitTradePrice = myRs.getBigDecimal("SnapshotUnitTradePrice");
+				
+				Timestamp created = myRs.getTimestamp("Created");
+				Timestamp modified = myRs.getTimestamp("Modified");
+				
+
+				OrderLine tempOrderLine = new OrderLine(id, cycleNumber, memberId, productId, minQty, maxQty, allocation, received, 
+						snapshotPricelist, snapshotSupplier, snapshotBrand, snapshotSupplierProductCode, snapshotProductDescription,
+						snapshotUnitSize, snapshotQuantity, snapshotUnitTradePrice,
+						created, modified);
+
+				// add it to the list of OrderLine
+				orderlines.add(tempOrderLine);
+			}
+			
+			return orderlines;		
+		}
+		finally {
+			close (myConn, myStmt, myRs);
+		}
+	}
+	
+	
+	// get all orderLines for a cycle for a member - with or without stock items included
+	public List<OrderLine> getMyOrderLines(int aCycleNumber, int aMemberID, boolean includeStock) throws Exception {
+
+		List<OrderLine> orderlines = new ArrayList<>();
+
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+		String sql = null;
+		
+		try {
+			myConn = getConnection();
+
+			if (includeStock == true) {
+				sql = "select * from coop.orderline where CycleNumber=? and MemberID=? order by NominatedProductID";
+			} else {
+				sql = "select * from coop.orderline where CycleNumber=? and MemberID=? and SnapshotSupplier <> 'Stock' order by NominatedProductID";
+			}
+			
 
 			myStmt = myConn.prepareStatement(sql);
 
@@ -218,7 +299,8 @@ public class OrderLineDAO {
 					+ "where cyclenumber = ? and memberid=? "
 					+ ") as mine "
 					+ "on np.id = mine.nominatedproductid "
-					+ "order by np.stockid desc, np.id";
+					+ "where np.CycleNumber = ? "
+					+ "order by np.stockquantity desc, np.id";
 
 			myStmt = myConn.prepareStatement(sql);
 
@@ -226,6 +308,7 @@ public class OrderLineDAO {
 			myStmt.setInt(1, aCycleNumber);
 			myStmt.setInt(2, aCycleNumber);
 			myStmt.setInt(3, aMemberID);
+			myStmt.setInt(4, aCycleNumber);
 			
 			logger.info("cooplog: About to execute sql: " + myStmt.toString());
 
