@@ -33,16 +33,21 @@
 			<h:messages globalOnly="true" />
     
 			<h:form id="mainform">
+
 				<p:growl id="growl_info" showDetail="true" life="4000" severity="info" />
 				<p:growl id="growl_warn" showDetail="false" life="4000" severity="warn" />
 				
-				<p:dataTable id="productsTable" value="#{orderFormBean.pricelistProducts}" var="tempProduct"
+				<p:tabView>
+				
+				<p:tab title="Dry Goods">
+				<p:dataTable id="productsTableD" value="#{orderFormBean.getPricelistProducts('Dry')}" var="tempProductD"
 					tableStyle="width:auto"
 					paginator="true" rows="6"
 					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}   {MyContent} {RowsPerPageDropdown}"
         			rowsPerPageTemplate="6,12,18"
-        			filteredValue="#{orderFormBean.filteredProducts}"
-        			widgetVar="productsTable">
+        			filteredValue="#{orderFormBean.filteredProductsD}"
+        			widgetVar="productsTableD"
+        			emptyMessage="No products for Dry Goods">
         			
         			<f:facet name="{MyContent}">
        					<p:spacer height="10" />Rows per page:
@@ -51,45 +56,224 @@
         			<f:facet name="header">
 					<p:outputPanel>
 						<h:outputText value="Search all fields:" />
-						<p:inputText id="globalFilter" onkeyup="PF('productsTable').filter()" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTableD').filter()" />
 						<h:outputText value=" " />
-						<p:commandButton value="Clear searches" onclick="PF('productsTable').clearFilters()" />
+						<p:commandButton value="Clear searches" onclick="PF('productsTableD').clearFilters()" />
 					</p:outputPanel>
 					</f:facet>
 					
 					<p:column>
-						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.addToOrder(tempProduct)}" type="text/html" >
+						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.addToOrder(tempProductD)}" type="text/html" >
 							<p:graphicImage value="/resources/images/add.png" title="Add to cart" />
 						</p:commandLink>
 					</p:column>
 					
-					<p:column sortBy="#{tempProduct.supplier}" headerText="Supplier" filterBy="#{tempProduct.supplier}" filterMatchMode="contains">
-						<h:outputText value="#{tempProduct.supplier}" />
+					<p:column sortBy="#{tempProductD.supplier}" headerText="Supplier" filterBy="#{tempProductD.supplier}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductD.supplier}" />
 					</p:column>
 					
-					<p:column sortBy="#{tempProduct.productDescription}" headerText="Product" filterBy="#{tempProduct.productDescription}" filterMatchMode="contains">
-						<h:outputText value="#{tempProduct.productDescription}" />
+					<p:column sortBy="#{tempProductD.productDescription}" headerText="Product" filterBy="#{tempProductD.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductD.productDescription}" />
 					</p:column>
 					
-					<p:column sortBy="#{tempProduct.brand}" headerText="Brand" filterBy="#{tempProduct.brand}" filterMatchMode="contains">
-						<h:outputText value="#{tempProduct.brand}" />
+					<p:column sortBy="#{tempProductD.brand}" headerText="Brand" filterBy="#{tempProductD.brand}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductD.brand}" />
 					</p:column>
 
 					<p:column headerText="Unit Size" style="text-align:left;">
-						<h:outputText value="#{tempProduct.unitSize}" />
+						<h:outputText value="#{tempProductD.unitSize}" />
 					</p:column>
 
 					<p:column headerText="Quantity" style="text-align:left;">
-						<h:outputText value="#{tempProduct.quantity}" />
+						<h:outputText value="#{tempProductD.quantity}" />
 					</p:column>
 
 					<p:column headerText="Price" style="text-align:left;">
-						<h:outputText value="#{tempProduct.unitTradePrice}">
+						<h:outputText value="#{tempProductD.unitTradePrice}">
 							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
 						</h:outputText>
 					</p:column>
 					
 				</p:dataTable>
+				</p:tab>
+				
+				<p:tab title="Fruit &amp; Veg">
+				<p:dataTable id="productsTableF" value="#{orderFormBean.getPricelistProducts('Fruit')}" var="tempProductF"
+					tableStyle="width:auto"
+					paginator="true" rows="6"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}   {MyContent} {RowsPerPageDropdown}"
+        			rowsPerPageTemplate="6,12,18"
+        			filteredValue="#{orderFormBean.filteredProductsF}"
+        			widgetVar="productsTableF"
+        			emptyMessage="No products for Fruit &amp; Veg">
+        			
+        			<f:facet name="{MyContent}">
+       					<p:spacer height="10" />Rows per page:
+   					</f:facet>
+          			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTableF').filter()" />
+						<h:outputText value=" " />
+						<p:commandButton value="Clear searches" onclick="PF('productsTableF').clearFilters()" />
+					</p:outputPanel>
+					</f:facet>
+					
+					<p:column>
+						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.addToOrder(tempProductF)}" type="text/html" >
+							<p:graphicImage value="/resources/images/add.png" title="Add to cart" />
+						</p:commandLink>
+					</p:column>
+					
+					<p:column sortBy="#{tempProductF.supplier}" headerText="Supplier" filterBy="#{tempProductF.supplier}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductF.supplier}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProductF.productDescription}" headerText="Product" filterBy="#{tempProductF.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductF.productDescription}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProductF.brand}" headerText="Brand" filterBy="#{tempProductF.brand}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductF.brand}" />
+					</p:column>
+
+					<p:column headerText="Unit Size" style="text-align:left;">
+						<h:outputText value="#{tempProductF.unitSize}" />
+					</p:column>
+
+					<p:column headerText="Quantity" style="text-align:left;">
+						<h:outputText value="#{tempProductF.quantity}" />
+					</p:column>
+
+					<p:column headerText="Price" style="text-align:left;">
+						<h:outputText value="#{tempProductF.unitTradePrice}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+				</p:dataTable>
+				</p:tab>
+
+				
+				<p:tab title="Local">
+				<p:dataTable id="productsTableL" value="#{orderFormBean.getPricelistProducts('Local')}" var="tempProductL"
+					tableStyle="width:auto"
+					paginator="true" rows="6"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}   {MyContent} {RowsPerPageDropdown}"
+        			rowsPerPageTemplate="6,12,18"
+        			filteredValue="#{orderFormBean.filteredProductsL}"
+        			widgetVar="productsTableL"
+        			emptyMessage="No products for Local">
+        			
+        			<f:facet name="{MyContent}">
+       					<p:spacer height="10" />Rows per page:
+   					</f:facet>
+          			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTableL').filter()" />
+						<h:outputText value=" " />
+						<p:commandButton value="Clear searches" onclick="PF('productsTableL').clearFilters()" />
+					</p:outputPanel>
+					</f:facet>
+					
+					<p:column>
+						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.addToOrder(tempProductL)}" type="text/html" >
+							<p:graphicImage value="/resources/images/add.png" title="Add to cart" />
+						</p:commandLink>
+					</p:column>
+					
+					<p:column sortBy="#{tempProductL.supplier}" headerText="Supplier" filterBy="#{tempProductL.supplier}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductL.supplier}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProductL.productDescription}" headerText="Product" filterBy="#{tempProductL.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductL.productDescription}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProductL.brand}" headerText="Brand" filterBy="#{tempProductL.brand}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductL.brand}" />
+					</p:column>
+
+					<p:column headerText="Unit Size" style="text-align:left;">
+						<h:outputText value="#{tempProductL.unitSize}" />
+					</p:column>
+
+					<p:column headerText="Quantity" style="text-align:left;">
+						<h:outputText value="#{tempProductL.quantity}" />
+					</p:column>
+
+					<p:column headerText="Price" style="text-align:left;">
+						<h:outputText value="#{tempProductL.unitTradePrice}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+				</p:dataTable>
+				</p:tab>
+
+				<p:tab title="Misc">
+				<p:dataTable id="productsTableM" value="#{orderFormBean.getPricelistProducts('Misc')}" var="tempProductM"
+					tableStyle="width:auto"
+					paginator="true" rows="6"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}   {MyContent} {RowsPerPageDropdown}"
+        			rowsPerPageTemplate="6,12,18"
+        			filteredValue="#{orderFormBean.filteredProductsM}"
+        			widgetVar="productsTableM"
+        			emptyMessage="No products for Misc">
+        			
+        			<f:facet name="{MyContent}">
+       					<p:spacer height="10" />Rows per page:
+   					</f:facet>
+          			
+        			<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Search all fields:" />
+						<p:inputText id="globalFilter" onkeyup="PF('productsTableM').filter()" />
+						<h:outputText value=" " />
+						<p:commandButton value="Clear searches" onclick="PF('productsTableM').clearFilters()" />
+					</p:outputPanel>
+					</f:facet>
+					
+					<p:column>
+						<p:commandLink update="mainform:myPersistentOrder mainform:growl_info mainform:growl_warn" actionListener="#{orderFormBean.addToOrder(tempProductM)}" type="text/html" >
+							<p:graphicImage value="/resources/images/add.png" title="Add to cart" />
+						</p:commandLink>
+					</p:column>
+					
+					<p:column sortBy="#{tempProductM.supplier}" headerText="Supplier" filterBy="#{tempProductM.supplier}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductM.supplier}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProductM.productDescription}" headerText="Product" filterBy="#{tempProductM.productDescription}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductM.productDescription}" />
+					</p:column>
+					
+					<p:column sortBy="#{tempProductM.brand}" headerText="Brand" filterBy="#{tempProductM.brand}" filterMatchMode="contains">
+						<h:outputText value="#{tempProductM.brand}" />
+					</p:column>
+
+					<p:column headerText="Unit Size" style="text-align:left;">
+						<h:outputText value="#{tempProductM.unitSize}" />
+					</p:column>
+
+					<p:column headerText="Quantity" style="text-align:left;">
+						<h:outputText value="#{tempProductM.quantity}" />
+					</p:column>
+
+					<p:column headerText="Price" style="text-align:left;">
+						<h:outputText value="#{tempProductM.unitTradePrice}">
+							<f:convertNumber currencySymbol="$" currencyCode="NZD" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+				</p:dataTable>
+				</p:tab>
+
+				
+				</p:tabView>
 				
 				<br/><br/>
 				

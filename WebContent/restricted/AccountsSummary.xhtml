@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{accountsBean.loadShareoutSlips()}" />
+</f:metadata>
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Accounts Summary</title>
+
+	<h:outputStylesheet library="css" name="style.css" />
+
+	<style>
+	
+	* {
+	font-size: 10pt;
+	}
+	
+	table, th, td {
+		table-layout: fixed;
+   		border: 1px solid grey;
+   		border-collapse: collapse;
+   		font-size: 14px;
+   		color: #444444;
+	}
+	
+	th {
+	height: 120px;
+	}
+	
+	.verticalText{
+		writing-mode : sideways-rl;
+		  -ms-writing-mode: tb-rl; /* old IE 6 and 7 */
+		  -webkit-writing-mode: vertical-lr;
+		  -ms-writing-mode: vertical-rl;
+		}
+		
+	.ui-shadow {
+		-webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;
+	}
+	
+	</style>
+</h:head>
+
+<h:body>
+	<div id="container">
+		<div id="content">
+			<h:messages globalOnly="true" />
+			<h:form id="mainform">
+				
+
+				<p:dataTable id="shareoutSlipTable" value="#{accountsBean.shareoutSlips}"
+				 var="shareoutSlip"
+				 rowIndexVar="row">
+
+					
+					<p:column headerText="">
+						<h:outputText value="#{row + 1}" />
+					</p:column>
+					
+					<p:column headerText="Product" style="white-space: nowrap; text-align: left;">
+						<h:outputText value="#{shareoutSlip.productDescription}" />
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[0].shareoutname}" styleClass="verticalText" style="text-align: right;"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[0]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total0" value="#{accountsBean.totalForMember[0]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser0" for="total0" value="#{accountsBean.users[0].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[0] > 0}" /></f:facet>						
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[1].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[1]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total1" value="#{accountsBean.totalForMember[1]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser1" for="total1" value="#{accountsBean.users[1].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[1] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[2].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[2]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total2" value="#{accountsBean.totalForMember[2]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser2" for="total2" value="#{accountsBean.users[2].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[2] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[3].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[3]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total3" value="#{accountsBean.totalForMember[3]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser3" for="total3" value="#{accountsBean.users[3].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[3] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[4].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[4]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total4" value="#{accountsBean.totalForMember[4]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser4" for="total4" value="#{accountsBean.users[4].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[4] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[5].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[5]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total5" value="#{accountsBean.totalForMember[5]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser5" for="total5" value="#{accountsBean.users[5].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[5] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[6].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[6]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total6" value="#{accountsBean.totalForMember[6]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser6" for="total6" value="#{accountsBean.users[6].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[6] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[7].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[7]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total7" value="#{accountsBean.totalForMember[7]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser7" for="total7" value="#{accountsBean.users[7].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[7] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[8].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[8]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total8" value="#{accountsBean.totalForMember[8]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser8" for="total8" value="#{accountsBean.users[8].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[8] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[9].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[9]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total9" value="#{accountsBean.totalForMember[9]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser9" for="total9" value="#{accountsBean.users[9].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[9] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[10].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[10]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total10" value="#{accountsBean.totalForMember[10]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser10" for="total10" value="#{accountsBean.users[10].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[10] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[11].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[11]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total11" value="#{accountsBean.totalForMember[11]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser11" for="total11" value="#{accountsBean.users[11].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[11] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[12].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[12]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total12" value="#{accountsBean.totalForMember[12]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser12" for="total12" value="#{accountsBean.users[12].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[12] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[13].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[13]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total13" value="#{accountsBean.totalForMember[13]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser13" for="total13" value="#{accountsBean.users[13].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[13] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[14].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[14]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total14" value="#{accountsBean.totalForMember[14]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser14" for="total14" value="#{accountsBean.users[14].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[14] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="#{accountsBean.users[15].shareoutname}" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedMember[15]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="total15" value="#{accountsBean.totalForMember[15]}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipUser15" for="total15" value="#{accountsBean.users[15].shareoutname}" position="top"
+					              rendered="#{accountsBean.totalForMember[15] > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="Q to members" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedTotal}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="totalAll" value="#{accountsBean.totalAllMembers}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipAllMembers" for="totalAll" value="Total All Members" position="top"
+					              rendered="#{accountsBean.totalAllMembers > 0}" /></f:facet>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="Q to stock" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedAuctionbox}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="Price excl GST" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.invoicedUnitTradePrice}">
+							<f:convertNumber currencySymbol="" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+					<!--  V -->
+					<p:column id="V" style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="$ members" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedTotal * shareoutSlip.invoicedUnitTradePrice}" rendered="#{(shareoutSlip.receivedTotal * shareoutSlip.invoicedUnitTradePrice) > 0}">
+							<f:convertNumber currencySymbol="" type="currency" />
+						</h:outputText>
+					</p:column>
+					
+					<!--  W -->
+					<p:column id="W" style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="$ refund" styleClass="verticalText"/></f:facet>
+						<h:inputText value="#{shareoutSlip.refundAmount}" size="5" style="text-align:center; border:none; padding: 0; background-color:#ffffff;">
+							<f:convertNumber currencySymbol="" type="currency" />
+					        	<p:ajax />
+						</h:inputText>
+					</p:column>
+					
+					<!-- X -->
+					<p:column id="X" style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="$ to auction" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{shareoutSlip.receivedAuctionbox * shareoutSlip.invoicedUnitTradePrice}" rendered="#{(shareoutSlip.receivedAuctionbox * shareoutSlip.invoicedUnitTradePrice) > 0}">
+							<f:convertNumber currencySymbol="" type="currency" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="totalAuction" value="#{accountsBean.totalAuctionBox}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipAuctionBox" for="totalAuction" value="Total Auction Box" position="top"
+					              rendered="#{accountsBean.totalAuctionBox > 0}" /></f:facet>
+					</p:column>
+					
+					
+					<!-- Y = SUM(V..X) -->
+					<p:column style="width:25px; text-align: right;">
+						<f:facet name="header"><h:outputText value="$ our total" styleClass="verticalText"/></f:facet>
+						<h:outputText value="#{((shareoutSlip.receivedTotal + shareoutSlip.receivedAuctionbox) * shareoutSlip.invoicedUnitTradePrice) + shareoutSlip.refundAmount}"
+						rendered="#{(((shareoutSlip.receivedTotal + shareoutSlip.receivedAuctionbox) * shareoutSlip.invoicedUnitTradePrice) + shareoutSlip.refundAmount) > 0}">
+							<f:convertNumber currencySymbol="" type="currency" />
+						</h:outputText>
+						<f:facet name="footer"><h:outputText id="totalPricelist" value="#{accountsBean.totalForPricelist}">
+							<f:converter converterId="bigDecimalPlainDisplaySuppressZero" />
+						</h:outputText>
+						<p:tooltip id="toolTipTotalForPricelist" for="totalPricelist" value="Total for Pricelist" position="top"
+					              rendered="#{accountsBean.totalForPricelist > 0}" /></f:facet>
+					</p:column>
+										
+				</p:dataTable>
+				
+			</h:form>
+		</div>
+	</div>
+</h:body>
+</html>

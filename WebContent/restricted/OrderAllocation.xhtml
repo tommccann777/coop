@@ -89,9 +89,14 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Allocation" style="background-color:#{vAllocationRecord.rowtype=='Product' ? '#eee' : (vAllocationRecord.rowtype=='OrderLine' ? '#fff' : '')};text-align:left;">
-						<h:inputText id="allocation_input" value="#{vAllocationRecord.allocation}" rendered="#{(vAllocationRecord.rowtype eq 'OrderLine') and (loginBean.hasRole('Ordering'))}" size="7" valueChangeListener="#{orderFormBean.handleAllocationChange}">
+						<h:inputText id="allocation_input" value="#{vAllocationRecord.allocation}"
+						rendered="#{(vAllocationRecord.rowtype eq 'OrderLine') and (loginBean.hasRole('Ordering'))}"
+						size="7"
+						valueChangeListener="#{orderFormBean.handleAllocationChange}">
+						
 							<p:ajax />
 							<f:converter converterId="bigDecimalPlainDisplay" />
+							
 						</h:inputText>
 						<p:keyFilter for="allocation_input" mask="pnum" />
 						
@@ -99,6 +104,7 @@
 						<f:converter converterId="bigDecimalPlainDisplay" />
 						</h:outputText>
 					</p:column>
+					
 				</p:treeTable>
 			</h:form>
 

@@ -22,6 +22,7 @@ public class ShareoutSlip {
 	private BigDecimal receivedAuctionbox = new BigDecimal(0.0);
 	private BigDecimal invoicedUnitTradePrice = new BigDecimal(0.0);
 	private BigDecimal stockQuantity = new BigDecimal(0.0);
+	private BigDecimal refundAmount = new BigDecimal(0.0);		// used in Accounts pages as an input/output
 	
 	private Logger logger = Logger.getLogger(getClass().getName());
 	
@@ -31,7 +32,7 @@ public class ShareoutSlip {
 
 	public ShareoutSlip(int nominatedProductId, String supplierName, String supplierProductCode, String productDescription,
 			BigDecimal orderedMember[], BigDecimal receivedMember[], 
-			BigDecimal receivedAuctionbox, BigDecimal invoicedUnitTradePrice, BigDecimal stockQuantity) {
+			BigDecimal receivedAuctionbox, BigDecimal invoicedUnitTradePrice, BigDecimal stockQuantity, BigDecimal refundAmount) {
 		super();
 		this.nominatedProductId = nominatedProductId;
 		this.supplierName = supplierName;
@@ -42,6 +43,7 @@ public class ShareoutSlip {
 		this.receivedAuctionbox = receivedAuctionbox;
 		this.invoicedUnitTradePrice = invoicedUnitTradePrice;
 		this.stockQuantity = stockQuantity;
+		this.refundAmount = refundAmount;
 		
 		// calculate orderedTotal
 		refreshOrderedTotal();
@@ -173,6 +175,14 @@ public class ShareoutSlip {
 
 	public void setStockQuantity(BigDecimal stockQuantity) {
 		this.stockQuantity = stockQuantity;
+	}
+
+	public BigDecimal getRefundAmount() {
+		return refundAmount;
+	}
+
+	public void setRefundAmount(BigDecimal refundAmount) {
+		this.refundAmount = refundAmount;
 	}
 	
 }

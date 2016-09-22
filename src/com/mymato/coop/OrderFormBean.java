@@ -35,12 +35,15 @@ public class OrderFormBean implements Serializable {
 	
 	private List<ConsolidatedProductLine> myConsolidatedProductLines;
 	private List<ShareoutSlip> shareoutSlips;
-	private List<Stock> stocks;
 	List<User> users;
 	
 	private TreeNode treeSupplierOrderLines;
 	
-	private List<PricelistProduct> filteredProducts;
+	private List<PricelistProduct> filteredProductsD;
+	private List<PricelistProduct> filteredProductsF;
+	private List<PricelistProduct> filteredProductsL;
+	private List<PricelistProduct> filteredProductsM;
+	
 	private ProductDAO productDAO;
 	private OrderLineDAO orderLineDAO;
 	private SupplierOrderLineDAO supplierOrderLineDAO;
@@ -54,7 +57,6 @@ public class OrderFormBean implements Serializable {
 		myPersistentOrderLines = new ArrayList<>();
 		myConsolidatedProductLines = new ArrayList<>();
 		shareoutSlips = new ArrayList<>();
-		stocks = new ArrayList<>();
 		
 		productDAO = ProductDAO.getInstance();
 		orderLineDAO = OrderLineDAO.getInstance();
@@ -153,6 +155,25 @@ public class OrderFormBean implements Serializable {
 
 	public void resetSelected() {
 		//logger.info("resetSelected() called");
+	}
+	
+	// get the pricelist products for a pricelist
+	public List<PricelistProduct> getPricelistProducts(String aPricelist) {
+		List<PricelistProduct> pProducts = new ArrayList<>();
+		
+		logger.info("Searching " + pricelistProducts.size() + " products in pricelistProducts for pricelist = " + aPricelist);
+		
+		// Extract the products for the specified pricelist
+		for (int i = 0; i < pricelistProducts.size(); i++) {
+			PricelistProduct pp = pricelistProducts.get(i);
+			
+			if (pp.getPricelist().equalsIgnoreCase(aPricelist)) {
+				pProducts.add(pp);
+			}
+		}
+		
+		logger.info("Returning " + pProducts.size() + " pricelist products for " + aPricelist);
+		return pProducts;
 	}
 	
 	public void loadPricelistProducts(ComponentSystemEvent event) {
@@ -315,46 +336,10 @@ public class OrderFormBean implements Serializable {
 	// For the shareout slip view, 2 methods: loadShareoutSlips and getShareoutSlips
 	public void loadShareoutSlips() {
 		
-		List<VShareoutOrderLine> vshareoutorderlines;
-		
-		logger.info("cooplog: Loading Shareout Slips");
-		shareoutSlips.clear();
-		stocks.clear();
-		
 		// What cycle are we in?
 		Cycle currentCycle = (Cycle) ApplicationMapHelper.getValueFromApplicationMap(ApplicationMapHelper.CYCLE_KEY);
 		
-		// first, get the array of VShareoutOrderlines
-		try {
-			vshareoutorderlines = orderLineDAO.getVShareoutOrderLines(currentCycle.getCycleNumber());
-			logger.info("cooplog loadShareoutSlips: There were " + vshareoutorderlines.size() + " shareout slips returned");
-		} catch (Exception exc) {
-			// send this to server logs
-			logger.log(Level.SEVERE, "cooplog loadShareoutSlips: Could not retrieve list of Shareout Order Lines", exc);
-			
-			// add error message for JSF page
-			addErrorMessage(exc);
-			
-			// Can't do anything else so
-			return;
-		}
-		
-		// second, get the list of stocks
-		try {
-			stocks = StockDAO.getInstance().getStocks();
-			logger.info("cooplog loadShareoutSlips: There were " + stocks.size() + " stock records returned");
-		} catch (Exception exc) {
-			// send this to server logs
-			logger.log(Level.SEVERE, "cooplog loadShareoutSlips: Could not retrieve list of Stock records", exc);
-			
-			// add error message for JSF page
-			addErrorMessage(exc);
-			
-			// Can't do anything else so
-			return;
-		}
-		
-		// third, get the array of usernames
+		// Populate the set of users
 		try {
 			users = UserDAO.getInstance().getUsers();
 			logger.info("cooplog loadShareoutSlips: There were " + users.size() + " users returned");
@@ -363,109 +348,14 @@ public class OrderFormBean implements Serializable {
 			// send this to server logs
 			logger.log(Level.SEVERE, "cooplog loadShareoutSlips: Could not retrieve list of Users", exc);
 			
-			// add error message for JSF page
-			addErrorMessage(exc);
-			
 			// Can't do anything else so
 			return;
 		}
-		
-		// Track the event of a new product and the record being written to
-		String currentSupplierProduct = "";
-		ShareoutSlip currentShareoutSlip = null;
-		
-		// third, construct the ArrayList of ShareoutSlips
-		for (int i = 0; i < vshareoutorderlines.size(); i++) {
-			// get the vShareoutOrderLine
-			VShareoutOrderLine vsool = vshareoutorderlines.get(i);
-			
-			// get the supplier and product code
-			String thisSupplierProduct = vsool.getSupplierName() + "-" + vsool.getNominatedProductId(); //.getSupplierProductCode();
-			
-			// detect a product change boundary - create a new ShareoutSlip and add it to the list
-			if (!currentSupplierProduct.equals(thisSupplierProduct)) {
-				// create a new Shareout slip
-				currentShareoutSlip = new ShareoutSlip();
 				
-				// populate the shareoutSlip object
-				currentShareoutSlip.setNominatedProductId(vsool.getNominatedProductId());
-				//logger.info(">>>>> ProductId=" + currentShareoutSlip.getNominatedProductId());
-				
-				currentShareoutSlip.setSupplierName(vsool.getSupplierName());
-				//logger.info(">>>>> SupplierName=" + currentShareoutSlip.getSupplierName());
-				
-				currentShareoutSlip.setSupplierProductCode(vsool.getSupplierProductCode());
-				//logger.info(">>>>> SupplierProductCode=" + currentShareoutSlip.getSupplierProductCode());
-				
-				currentShareoutSlip.setProductDescription(vsool.getProductDescription());
-				//logger.info(">>>>> ProductDescription=" + currentShareoutSlip.getProductDescription());
-				
-				currentShareoutSlip.setInvoicedUnitTradePrice(vsool.getInvoicedUnitTradePrice());
-				currentShareoutSlip.setStockQuantity(vsool.getStockQuantity());
-				
-				// add to the list of shareoutSlips
-				shareoutSlips.add(currentShareoutSlip);
-				
-				// update the product tracking variable
-				currentSupplierProduct = thisSupplierProduct;
-			}
-			
-			logger.info("cooplog loadShareoutSlips: checkpoint 1");
-			
-			// Now populate the allocations
-			// For this vsool, work out the user index (from 1 to 20)
-			int userIndex = UserIndex(users, vsool.getMemberId());
-			logger.info("loadShareoutSlips: userIndex = " + userIndex + " for Member Id " + vsool.getMemberId());
-			
-			logger.info("cooplog loadShareoutSlips: checkpoint 2");
-			
-			// only add this user's allocation and received values if they are within the max permitted number of members - to prevent array overflow
-			if (userIndex != -1 && userIndex < ShareoutSlip.MAX_MEMBERS) {
-				currentShareoutSlip.setOrderedMember(vsool.getAllocated(), userIndex);
-				currentShareoutSlip.setReceivedMember(vsool.getReceived(), userIndex);
-			}
-			
-			// refresh the orderedTotal
-			currentShareoutSlip.refreshOrderedTotal();
-
-			// refresh the receivedTotal
-			currentShareoutSlip.refreshReceivedTotal();
-			
-		}
-		
-		// Add in the stock amounts to the shareout slips
-		for (int i = 0; i < shareoutSlips.size(); i++) {
-			ShareoutSlip slip = shareoutSlips.get(i);
-			
-			// scan the stock records to see if we have a matching nominated product id
-			for (int j = 0; j < stocks.size(); j++) {
-				Stock stock = stocks.get(j);
-				
-				if (stocks.get(j).getNominatedProductId() == slip.getNominatedProductId()) {
-					slip.setReceivedAuctionbox(stock.getUnitQuantity());
-				}					
-			}
-		}
-		
-		
-		logger.info("cooplog loadShareoutSlips: checkpoint 3");
-		
-		
+		// get the shareout slips - populated for the set of users
+		shareoutSlips = ShareoutSlipLoader.loadShareoutSlips(currentCycle.getCycleNumber(), users);				
 	}
 	
-	// get the index of the memberId in the users list
-	public int UserIndex(List<User> users, int memberId) {
-		int userIndex = -1;
-		
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).getId() == memberId) {
-				userIndex = i;
-				break;
-			}				
-		}
-		
-		return userIndex;
-	}
 	
 	public List<ShareoutSlip> getShareoutSlips() {
 		logger.info("cooplog: Getting Shareout Slips");
@@ -785,6 +675,8 @@ public class OrderFormBean implements Serializable {
 		OrderLine o = null;
 		
 		logger.info("Handling allocation change");
+		// get the current cycle number
+		Cycle currentCycle = (Cycle) ApplicationMapHelper.getValueFromApplicationMap(ApplicationMapHelper.CYCLE_KEY);
 		
 		TreeTable data = (TreeTable) vcEvent.getComponent().findComponent("allocationTreeTable");
 		
@@ -803,8 +695,12 @@ public class OrderFormBean implements Serializable {
 			// Get the object from the database
 			o = orderLineDAO.getOrderLine(orderLineId);
 			
+			BigDecimal newValue = (BigDecimal) vcEvent.getNewValue();
+			
 			// Set the new value
-			o.setAllocation((BigDecimal) vcEvent.getNewValue());
+			o.setAllocation(newValue);
+			// Set the (default) received value
+			o.setReceived(newValue);
 			
 			// Update the database
 			orderLineDAO.updateOrderLine(o);
@@ -813,6 +709,7 @@ public class OrderFormBean implements Serializable {
 			// database update did not succeed, restore the original value in the OrderLine object
 			if (o != null) {
 				o.setAllocation(originalAllocation);
+				o.setReceived(originalAllocation);
 			}
 			
 			// send this to server logs
@@ -821,6 +718,23 @@ public class OrderFormBean implements Serializable {
 			// add error message for JSF page
 			addErrorMessage(exc);
 		}
+		
+		// perform a check to see if the total allocated is greater than the stock available
+		// set a stockWarning flag if this is true
+		// 1. Get the amount of stock for a stock product
+		if (o.getSnapshotSupplier().equals("Stock")) {
+			try {
+				int np_id = o.getNominatedProductId();
+				boolean stockCheck = orderLineDAO.getAllocationStockCheck(currentCycle.getCycleNumber(), np_id);
+				// We need a way to signal this to the user
+				logger.info("-------------------------- setting StockWarning to " + stockCheck + " for product " + np_id);
+			} catch (Exception exc) {
+				// send this to server logs. The stock check is not critical so can fail silently 
+				logger.log(Level.SEVERE, "cooplog: Error checking total allocation.", exc);
+			}
+		}
+		
+		
 		
 		
 	}
@@ -1098,14 +1012,39 @@ public class OrderFormBean implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
-	public List<PricelistProduct> getFilteredProducts() {
-		return filteredProducts;
+	public List<PricelistProduct> getFilteredProductsD() {
+		return filteredProductsD;
 	}
 
-	public void setFilteredProducts(List<PricelistProduct> filteredProducts) {
-		this.filteredProducts = filteredProducts;
+	public void setFilteredProductsD(List<PricelistProduct> filteredProducts) {
+		this.filteredProductsD = filteredProducts;
 	}
 	
+	public List<PricelistProduct> getFilteredProductsF() {
+		return filteredProductsF;
+	}
+
+	public void setFilteredProductsF(List<PricelistProduct> filteredProducts) {
+		this.filteredProductsF = filteredProducts;
+	}
+	
+	public List<PricelistProduct> getFilteredProductsL() {
+		return filteredProductsL;
+	}
+
+	public void setFilteredProductsL(List<PricelistProduct> filteredProducts) {
+		this.filteredProductsL = filteredProducts;
+	}
+	
+	public List<PricelistProduct> getFilteredProductsM() {
+		return filteredProductsM;
+	}
+
+	public void setFilteredProductsM(List<PricelistProduct> filteredProducts) {
+		this.filteredProductsM = filteredProducts;
+	}
+	
+
 	public List<User> getUsers() {
 		return users;
 	}
@@ -1124,10 +1063,6 @@ public class OrderFormBean implements Serializable {
 	
 	// Treenode
 	public void loadAllocations() {
-		
-		// No need to do anything if allocations list already populated
-		// if (allocations != null)
-		//	return;
 		
 		Cycle currentCycle = (Cycle) ApplicationMapHelper.getValueFromApplicationMap(ApplicationMapHelper.CYCLE_KEY);
 		

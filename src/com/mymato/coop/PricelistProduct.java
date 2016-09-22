@@ -1,6 +1,8 @@
 package com.mymato.coop;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
+
 import javax.faces.bean.ManagedBean;
 
 @ManagedBean
@@ -15,7 +17,9 @@ public class PricelistProduct {
 	private String unitSize;
 	private String quantity;
 	private BigDecimal unitTradePrice;
-	private boolean valid;	
+	private boolean valid;
+	
+	private Logger logger = Logger.getLogger(getClass().getName());
 	
 	public PricelistProduct() {
 		// No-arg constructor
@@ -29,8 +33,7 @@ public class PricelistProduct {
 		this.pricelist = pricelist;
 		this.supplier = supplier;
 		this.brand = brand;
-		this.supplierProductCode = supplierProductCode;
-		
+		this.supplierProductCode = supplierProductCode;		
 		this.productDescription = productDescription;
 		this.unitSize = unitSize;
 		this.quantity = quantity;

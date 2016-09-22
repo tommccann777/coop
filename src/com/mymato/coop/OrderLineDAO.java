@@ -45,6 +45,78 @@ public class OrderLineDAO {
 		return theDataSource;
 	}
 	
+	// get member received lines
+	public List<AccountsMemberReceivedLine> getReceivedLines(int aCycleNumber) throws Exception {
+		
+		List<AccountsMemberReceivedLine> receivedlines = new ArrayList<>();
+		
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+		
+		try {
+			myConn = getConnection();
+
+			String sql = "select "
+						+ "ol.CycleNumber "
+						+ ", us.Username "
+						+ ", ol.SnapshotPricelist "
+						+ ", ol.SnapshotSupplier "
+						+ ", ol.SnapshotBrand "
+						+ ", ol.SnapshotSupplierProductCode "
+						+ ", ol.SnapshotProductDescription "
+						+ ", ol.SnapshotUnitSize "
+						+ ", ol.SnapshotQuantity "
+						+ ", ol.Received "
+						+ ", np.InvoicedUnitTradePrice "
+						+ "from coop.orderline as ol "
+						+ "left join coop.user as us "
+						+ "on us.ID = ol.MemberID "
+						+ "left join coop.nominatedproduct as np "
+						+ "on np.ID = ol.NominatedProductID "
+						+ "where ol.CycleNumber=? and ol.Received > 0 "
+						+ "order by us.Username, ol.SnapshotSupplier";
+
+			myStmt = myConn.prepareStatement(sql);
+
+			// set parameters
+			myStmt.setInt(1, aCycleNumber);
+			
+			logger.info("cooplog: About to execute sql: " + myStmt.toString());
+
+			myRs = myStmt.executeQuery();
+
+			// process result set
+			while (myRs.next()) {
+				
+				int cycleNumber = myRs.getInt("CycleNumber");
+				String username = myRs.getString("Username");
+				String snapshotPriceList = myRs.getString("SnapshotPricelist");
+				String snapshotSupplier = myRs.getString("SnapshotSupplier");
+				String snapshotBrand = myRs.getString("SnapshotBrand");
+				String snapshotSupplierProductCode = myRs.getString("SnapshotSupplierProductCode");
+				String snapshotProductDescription = myRs.getString("SnapshotProductDescription");
+				String snapshotUnitSize = myRs.getString("SnapshotUnitSize");
+				String snapshotQuantity = myRs.getString("SnapshotQuantity");
+				BigDecimal received = myRs.getBigDecimal("Received");
+				BigDecimal invoicedUnitTradePrice = myRs.getBigDecimal("InvoicedUnitTradePrice");
+
+				AccountsMemberReceivedLine tempReceivedLine = new AccountsMemberReceivedLine(cycleNumber, username,
+						snapshotPriceList, snapshotSupplier, snapshotBrand, snapshotSupplierProductCode, snapshotProductDescription,
+						snapshotUnitSize, snapshotQuantity, received, invoicedUnitTradePrice);
+
+				// add it to the list of OrderLine
+				receivedlines.add(tempReceivedLine);
+			}		
+		}
+		finally {
+			close (myConn, myStmt, myRs);
+		}
+
+		
+		return receivedlines;
+	}
+	
 	// get all VShareoutOrderLines for a cycle
 	// this brings back the contents of a view (sql query) containing:
 	public List<VShareoutOrderLine> getVShareoutOrderLines(int cycleNumber) throws Exception {
@@ -70,11 +142,14 @@ public class OrderLineDAO {
 						+ ", ol.Received "
 						+ ", prd.InvoicedUnitTradePrice "
 						+ ", prd.StockQuantity "
+						+ ", refund.Amount as RefundAmount "
 						+ "from coop.orderline as ol "
 						+ "left join coop.nominatedproduct as prd "
 						+ "on ol.NominatedProductID = prd.ID "
 						+ "left join coop.user as usr "
 						+ "on ol.MemberID = usr.ID "
+						+ "left join coop.accountsrefund as refund "
+						+ "on refund.NominatedProductID = prd.ID and refund.CycleNumber = ? "
 						+ "where ol.CycleNumber = ? " //  and ol.Allocation > 0
 						+ "order by prd.Supplier, prd.SupplierProductCode";
 
@@ -82,6 +157,7 @@ public class OrderLineDAO {
 
 			// set parameters
 			myStmt.setInt(1, cycleNumber);
+			myStmt.setInt(2, cycleNumber);
 			
 			logger.info("cooplog: About to execute sql: " + myStmt.toString());
 
@@ -101,10 +177,11 @@ public class OrderLineDAO {
 				BigDecimal received = myRs.getBigDecimal("Received");
 				BigDecimal invoicedUnitTradePrice = myRs.getBigDecimal("InvoicedUnitTradePrice");
 				BigDecimal stockQuantity = myRs.getBigDecimal("StockQuantity");
+				BigDecimal refundAmount = myRs.getBigDecimal("RefundAmount");
 
 				VShareoutOrderLine tempvShareoutOrderLine = new VShareoutOrderLine(orderlineid, productid, suppliername, 
 						supplierproductcode, productdescription, memberid, username, allocation, received,
-						invoicedUnitTradePrice, stockQuantity);
+						invoicedUnitTradePrice, stockQuantity, refundAmount);
 
 				// add it to the list of OrderLine
 				vshareoutorderlines.add(tempvShareoutOrderLine);
@@ -657,7 +734,7 @@ public class OrderLineDAO {
 			+ "from coop.orderline as o "
 			+ "join coop.user as u "
 			+ "on o.MemberID = u.ID "
-			+ "where CycleNumber=? "
+			+ "where CycleNumber=? and (o.MinQty > 0 or o.MaxQty > 0) "
 			+ ") "
 			+ "order by NominatedProductID, RowType Desc ";
 
@@ -667,7 +744,7 @@ public class OrderLineDAO {
 			myStmt.setInt(1, cycleNumber);
 			myStmt.setInt(2, cycleNumber);
 			myStmt.setInt(3, cycleNumber);
-			logger.info("cooplog: Attempting to execute sql: " + myStmt.toString());
+			logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>> getVAllocationRecords: Attempting to execute sql: " + myStmt.toString());
 			
 			myRs = myStmt.executeQuery();
 			
@@ -710,6 +787,52 @@ public class OrderLineDAO {
 		}
 		
 		return root;
+	}
+	
+	public boolean getAllocationStockCheck(int aCycleNumber, int aNominatedProductId) throws Exception {
+		
+		// get the records from this query
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+		boolean result = false;
+		
+		try {
+			myConn = getConnection();
+			
+			String sql = 
+				"select case when (ol.TotalAllocated > np.StockQuantity) then true else false end as StockWarning "
+				+ "from coop.nominatedproduct as np "
+				+ "join "
+				+ "( "
+				+ "select NominatedProductID, sum(Allocation) as TotalAllocated "
+				+ "from coop.orderline "
+				+ "where CycleNumber=? "
+				+ "group by NominatedProductID "
+				+ ") as ol "
+				+ "on np.ID = ol.NominatedProductID "
+				+ "where np.ID = ?";
+			
+			myStmt = myConn.prepareStatement(sql);
+
+			// set parameters
+			myStmt.setInt(1, aCycleNumber);
+			myStmt.setInt(2, aNominatedProductId);
+
+			logger.info("cooplog: Attempting to execute sql: " + myStmt.toString());
+			
+			myRs = myStmt.executeQuery();
+			
+			if (myRs.next()) {
+				result = myRs.getBoolean("StockWarning");
+			}
+			
+		}
+		finally {
+			close (myConn, myStmt);
+		}		
+				
+		return result;
 	}
 
 	private Connection getConnection() throws Exception {

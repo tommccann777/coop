@@ -99,7 +99,7 @@ public class ProductDAO {
 
 			String sql = "insert into coop.pricelistproduct "
 					+ "(Pricelist, Supplier, Brand, SupplierProductCode, ProductDescription, UnitSize, Quantity, UnitTradePrice, Valid)"
-					+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			myStmt = myConn.prepareStatement(sql);
 
@@ -115,6 +115,7 @@ public class ProductDAO {
 			myStmt.setBigDecimal(8, theProduct.getUnitTradePrice());
 			myStmt.setBoolean(9, theProduct.isValid());
 			
+			logger.info("Attempting to run sql: " + myStmt.toString());
 			myStmt.execute();			
 		}
 		finally {
@@ -254,11 +255,17 @@ public class ProductDAO {
 	// add a collection of products to the database
 	public void addPricelistProducts(List<PricelistProduct> products) throws Exception {
 		
+		logger.info("Attempting to add " + products.size() + " pricelist products");
+		
 		for (int i = 0; i < products.size(); i++) {
 			PricelistProduct p = products.get(i);
 			
+			logger.info("Attempting to add pricelist product " + i);
 			addPricelistProduct(p);
+			logger.info("Succeeded in adding pricelist product " + i);
 		}
+		
+		logger.info("Finished adding pricelist products");
 	}
 	
 	// copy a pricelist product record to the nominated product table
@@ -325,7 +332,7 @@ public class ProductDAO {
 				String sql = "insert into coop.nominatedproduct "
 						+ "(Pricelist, Supplier, Brand, SupplierProductCode, ProductDescription, UnitSize, Quantity, "
 						+ "UnitTradePrice, Valid, CycleNumber, PricelistProductID) "
-						+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 				myStmt = myConn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 

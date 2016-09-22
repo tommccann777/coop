@@ -15,6 +15,7 @@ public class VShareoutOrderLine {
 	private BigDecimal received;
 	private BigDecimal invoicedUnitTradePrice;
 	private BigDecimal stockQuantity;
+	private BigDecimal refundAmount;
 
 	public VShareoutOrderLine() {
 		// TODO Auto-generated constructor stub
@@ -22,7 +23,7 @@ public class VShareoutOrderLine {
 
 	public VShareoutOrderLine(int orderLineId, int nominatedProductId, String supplierName, String supplierProductCode,
 			String productDescription, int memberId, String memberName, BigDecimal allocated, BigDecimal received,
-			BigDecimal invoicedUnitTradePrice, BigDecimal stockQuantity) {
+			BigDecimal invoicedUnitTradePrice, BigDecimal stockQuantity, BigDecimal refundAmount) {
 		super();
 		this.orderLineId = orderLineId;
 		this.nominatedProductId = nominatedProductId;
@@ -35,6 +36,7 @@ public class VShareoutOrderLine {
 		this.received = received;
 		this.invoicedUnitTradePrice = invoicedUnitTradePrice;
 		this.stockQuantity = stockQuantity;
+		this.refundAmount = refundAmount;		// used in Accounts pages as an input/output
 	}
 
 	public int getOrderLineId() {
@@ -123,6 +125,14 @@ public class VShareoutOrderLine {
 
 	public void setStockQuantity(BigDecimal stockQuantity) {
 		this.stockQuantity = stockQuantity;
+	}
+
+	public BigDecimal getRefundAmount() {
+		return refundAmount;
+	}
+
+	public void setRefundAmount(BigDecimal refundAmount) {
+		this.refundAmount = refundAmount;
 	}
 	
 }

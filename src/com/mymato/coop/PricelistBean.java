@@ -97,14 +97,18 @@ public class PricelistBean {
                 
                 while ((line = csvreader.readNext()) != null) {
                 	// check for an empty line
+                	logger.info("About to call Arrays.toString(line)");
                 	String allValues = Arrays.toString(line);
+                	logger.info("After call to Arrays.toString(line)");
 
                 	if (allValues.equals("[, , , , , , , ]")) {
                 		// skip this line
                 		continue;
                 	}
                 	
+                	logger.info("About to call createPricelistProductFromLine(line)");
                 	PricelistProduct product = createPricelistProductFromLine(line);
+                	logger.info("After call to createPricelistProductFromLine(line)");
                 	
                 	// If a product is not created then a data error has occurred
                 	if (product != null) {
@@ -127,9 +131,11 @@ public class PricelistBean {
 
 
             } catch (Exception exc) {
-            	logger.severe("Could not interpret file " + file.getFileName() + ".");
+        		
+            	logger.severe("Could not interpret file " + file.getFileName() + ". " + exc.getMessage());
             	FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Could not interpret file " + file.getFileName() + ".");
                 FacesContext.getCurrentInstance().addMessage(null, message);
+                
             } finally {
                 IOUtils.closeQuietly(csvreader);
             }
@@ -148,26 +154,45 @@ public class PricelistBean {
     
     public PricelistProduct createPricelistProductFromLine(String[] line) throws ParseException {
     	
+    	logger.info("!checkpoint 1");
+    	
     	// check we have the right number of values first
     	if (line.length < 8) {
+    		for (int i = 0; i < line.length; i++) {
+    			logger.info("line[" + i + "]=" + line[i]);
+    		}
+    		
     		throw new ParseException("CSV line has insufficient fields", 0);
     	}
     		
+    	logger.info("!checkpoint 2");
     	
     	int id = 0;
+    	logger.info("!checkpoint 2.1");
+    	
     	String pricelist = propercase(line[0]);
+    	logger.info("!checkpoint 2.2");
     	String supplier = propercase(line[1]);
+    	logger.info("!checkpoint 2.3");
     	String brand = line[2];
+    	logger.info("!checkpoint 2.4");
     	String supplierProductCode = line[3];
+    	logger.info("!checkpoint 2.5");
     	String productDescription = line[4];
+    	logger.info("!checkpoint 2.6");
     	String unitSize = line[5];
+    	logger.info("!checkpoint 2.7");
     	String quantity = line[6];
+    	
+    	logger.info("!checkpoint 3");
     	
     	// parse the price
     	boolean valid = false;
     	BigDecimal unitTradePrice = new BigDecimal(0.0);
     	DecimalFormat format = (DecimalFormat) NumberFormat.getInstance(Locale.US);
     	format.setParseBigDecimal(true);
+    	
+    	logger.info("!checkpoint 4");
     	
     	try {
     		unitTradePrice = (BigDecimal) format.parse(line[7]);
@@ -176,10 +201,14 @@ public class PricelistBean {
     		valid = false;
     	}
     	
+    	logger.info("!checkpoint 5");
     	
+    	logger.info("About to call new PricelistProduct(...)");
     	PricelistProduct product = new PricelistProduct(id, pricelist, supplier, brand, supplierProductCode,
     			productDescription, unitSize, quantity, unitTradePrice, valid);
+    	logger.info("After call to new PricelistProduct(...)");
     	
+    	logger.info("!checkpoint 6");
     	return product;    	
     }
     
@@ -203,12 +232,21 @@ public class PricelistBean {
     	logger.info("Importing products");
     	
     	try {
+    		logger.info("About to delete existing pricelist products");
     		productDAO.deleteAllPricelistProducts();
+    		logger.info("Deleted existing pricelist products");
         	productDAO.addPricelistProducts(uploadedPricelistProducts);
+        	logger.info("Added new pricelist products");
+        	
+        	FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Imported " + uploadedPricelistProducts.size() + " products.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
     	} catch (Exception exc) {
+    		logger.info("An exception occured while importing pricelist products");
     		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Could not import the uploaded products.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-    	}    	
+    	}
+    	
+    	logger.info("Finished importing products");
     }
     
     // return true if there are products to import
@@ -254,6 +292,11 @@ public class PricelistBean {
 	
 	// convert string to propercase
 	private String propercase(String s) {
+		// Deal with empty string
+		if (s.isEmpty()) {
+			return s;
+		}
+		
 		String trimmedLower = s.trim().toLowerCase();
 		char[] chars = trimmedLower.toCharArray();
 		chars[0] = Character.toTitleCase(chars[0]);

@@ -47,7 +47,7 @@
 				<br/><br/>
 				<h:outputText value="3. When you are satisfied that the product list is correct, click on the 'Accept Products' button." />
 				<br/>
-				<p:commandButton value="Accept Products" action="#{pricelistBean.acceptProducts()}" disabled="#{!pricelistBean.acceptable}" />
+				<p:commandButton value="Accept Products" action="#{pricelistBean.acceptProducts()}" disabled="#{!pricelistBean.acceptable}" update="growl_info" />
  
  				<br/><br/>
 				<h:outputText value="Preview Products" />

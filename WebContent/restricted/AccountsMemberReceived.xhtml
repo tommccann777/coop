@@ -16,6 +16,13 @@
 	<title>Coop Accounts Received</title>
 
 	<h:outputStylesheet library="css" name="style.css" />
+	
+	<style>
+	.ui-paginator {
+    text-align: right !important;
+	}
+	</style>
+	
 
 </h:head>
 
@@ -47,17 +54,63 @@
 
 				<br/><br/>
 				
-				<h:outputText value="Products Received for cycle " />
+				<h:outputText value="Products received by members in cycle " />
 				<h:outputText id="disp" value="#{accountsBean.selectedCycle}" />
 
-				<p:dataTable id="receivedTable" value="#{accountsBean.getReceived(accountsBean.selectedCycle)}" var="received" tableStyle="width:auto">
+				<p:dataTable id="receivedTable" value="#{accountsBean.getReceivedLines(accountsBean.selectedCycle)}" var="received" tableStyle="width:auto"
+				paginator="true" paginatorTemplate="{Exporters}">
+					
+					<f:facet name="{Exporters}">
+			            <h:commandLink>
+			                <p:graphicImage value="/resources/images/csv.png" width="24"/>
+			                <p:dataExporter type="csv" target="receivedTable" fileName="MembersReceivedx" />
+			            </h:commandLink>
+			        </f:facet>
+			        
+					<p:column headerText="Cycle">
+						<h:outputText value="#{received.cycleNumber}" />
+					</p:column>
+					
+					<p:column headerText="Member">
+						<h:outputText value="#{received.username}" />
+					</p:column>
+					
+					<p:column headerText="Pricelist">
+						<h:outputText value="#{received.snapshotPricelist}" />
+					</p:column>
 					
 					<p:column headerText="Supplier">
 						<h:outputText value="#{received.snapshotSupplier}" />
 					</p:column>
 					
-        			<p:column headerText="Product">
+        			<p:column headerText="Brand">
+						<h:outputText value="#{received.snapshotBrand}" />
+					</p:column>
+					
+					<p:column headerText="Code">
+						<h:outputText value="#{received.snapshotSupplierProductCode}" />
+					</p:column>
+					
+					<p:column headerText="Product">
 						<h:outputText value="#{received.snapshotProductDescription}" />
+					</p:column>
+					
+					<p:column headerText="Unit Size">
+						<h:outputText value="#{received.snapshotUnitSize}" />
+					</p:column>
+					
+					<p:column headerText="Quantity">
+						<h:outputText value="#{received.snapshotQuantity}" />
+					</p:column>
+					
+					<p:column headerText="Received" style="text-align: right;">
+						<h:outputText value="#{received.received}">
+							<f:converter converterId="bigDecimalPlainDisplay" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Price" style="text-align: right;">
+						<h:outputText value="#{received.invoicedUnitTradePrice}" />
 					</p:column>
 					
 				</p:dataTable>

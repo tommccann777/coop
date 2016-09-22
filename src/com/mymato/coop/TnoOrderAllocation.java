@@ -28,7 +28,8 @@ public class TnoOrderAllocation {
 
 	public TnoOrderAllocation(String rowtype, int productid, int orderLineid, String productcode,
 			String productdescription, String unitsize, String quantity, BigDecimal price, String membername,
-			BigDecimal minqty, BigDecimal maxqty, BigDecimal allocation, String supplier, int supplierorderlineid, BigDecimal supplierqty) {
+			BigDecimal minqty, BigDecimal maxqty, BigDecimal allocation, String supplier, int supplierorderlineid
+			, BigDecimal supplierqty) {
 		super();
 		this.rowtype = rowtype;
 		this.productid = productid;
@@ -236,6 +237,6 @@ public class TnoOrderAllocation {
 
 	public void setSupplierorderlineid(int supplierorderlineid) {
 		this.supplierorderlineid = supplierorderlineid;
-	}
+	}	
 	
 }
